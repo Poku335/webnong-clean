@@ -1,0 +1,42 @@
+.payment-container {
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  background-color: #fff;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.payment-message {
+  margin-top: 20px;
+}
+
+.payment-message.loading p {
+  color: #555;
+}
+
+.payment-message.success h2 {
+  color: #2ecc71;
+}
+
+.payment-message.error h2 {
+  color: #e74c3c;
+}
+
+.spinner {
+  margin: 0 auto 10px;
+  width: 30px;
+  height: 30px;
+  border: 4px solid #ccc;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

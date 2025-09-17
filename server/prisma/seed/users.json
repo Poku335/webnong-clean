@@ -1,0 +1,18 @@
+[
+  {
+    "email": "admin@gmail.com",
+    "password": "12345678",
+    "name": "Admin User",
+    "role": "admin",
+    "enabled": true,
+    "address": "123 Admin Street, Bangkok, Thailand"
+  },
+  {
+    "email": "test@gmail.com",
+    "password": "12345678",
+    "name": "Test User",
+    "role": "user",
+    "enabled": true,
+    "address": "456 User Avenue, Bangkok, Thailand"
+  }
+]

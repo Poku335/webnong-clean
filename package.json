@@ -1,0 +1,37 @@
+{
+  "name": "ecom-2024",
+  "version": "1.0.0",
+  "description": "E-Commerce website built with React + Node.js + Prisma + PostgreSQL",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "seed": "cd server && npm run seed",
+    "db:generate": "cd server && npx prisma generate",
+    "db:push": "cd server && npx prisma db push",
+    "db:seed": "cd server && npm run seed",
+    "db:setup": "npm run db:generate && npm run db:push && npm run db:seed"
+  },
+  "keywords": [
+    "ecommerce",
+    "react",
+    "nodejs",
+    "prisma",
+    "postgresql",
+    "stripe",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
