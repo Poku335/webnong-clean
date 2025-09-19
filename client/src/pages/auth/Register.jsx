@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import zxcvbn from "zxcvbn";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const registerSchema = z
   .object({
@@ -20,6 +21,7 @@ const registerSchema = z
 
 const Register = () => {
   // Javascript
+  const navigate = useNavigate();
   const [passwordScore, setPasswordScore] = useState(0);
 
   const {
@@ -53,6 +55,8 @@ const Register = () => {
 
       console.log(res.data);
       toast.success(res.data);
+      // Navigate to login page after successful registration
+      navigate("/login");
     } catch (err) {
       const errMsg = err.response?.data?.message;
       toast.error(errMsg);

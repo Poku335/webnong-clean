@@ -37,7 +37,7 @@ const SearchCard = () => {
         type="submit"
         className="px-4 py-3 bg-primary-500 hover:bg-primary-600 text-white flex items-center justify-center transition-all duration-200 hover:shadow-medium"
       >
-        <Search className="w-4 h-4" />
+        <Search className="w-4 h-6" />
       </button>
     </form>
   );

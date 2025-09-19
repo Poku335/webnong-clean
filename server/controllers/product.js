@@ -118,6 +118,8 @@ exports.remove = async (req, res) => {
     try {
         // code
         const { id } = req.params
+        console.log(`Attempting to delete product with ID: ${id}`)
+        
         // หนังชีวิต 
         // Step 1 ค้นหาสินค้า include images
         const product = await prisma.product.findFirst({
@@ -125,28 +127,65 @@ exports.remove = async (req, res) => {
             include: { images: true }
         })
         if (!product) {
+            console.log(`Product with ID ${id} not found`)
             return res.status(400).json({ message: 'Product not found!!' })
         }
+        console.log(`Found product: ${product.title} with ${product.images?.length || 0} images`)
         // console.log(product)
         // Step 2 Promise ลบรูปภาพใน cloud ลบแบบ รอฉันด้วย
-        const deletedImage = product.images
-        .map((image)=>
-        new Promise((resolve,reject)=>{
-            // ลบจาก cloud
-            cloudinary.uploader.destroy(image.public_id,(error,result)=>{
-                if(error) reject(error)
-                else resolve(result)
+        if (product.images && product.images.length > 0) {
+            const deletedImage = product.images
+            .map((image)=>
+            new Promise((resolve,reject)=>{
+                // ลบจาก cloud
+                cloudinary.uploader.destroy(image.public_id,(error,result)=>{
+                    if(error) {
+                        console.log(`Error deleting image ${image.public_id}:`, error);
+                        // ไม่ reject แต่ resolve เพื่อให้การลบสินค้าสามารถดำเนินต่อไปได้
+                        resolve({ error: error, public_id: image.public_id });
+                    } else {
+                        resolve(result)
+                    }
+                })
             })
+            )
+            await Promise.all(deletedImage)
+        }
+        // Step 3 ลบข้อมูลที่เกี่ยวข้องก่อน
+        console.log(`Deleting related data for product ID: ${id}`)
+        
+        // ลบ ProductOnOrder ที่อ้างอิงสินค้านี้
+        const deletedOrders = await prisma.productOnOrder.deleteMany({
+            where: {
+                productId: Number(id)
+            }
         })
-        )
-        await Promise.all(deletedImage)
-        // Step 3 ลบสินค้า
+        console.log(`Deleted ${deletedOrders.count} ProductOnOrder records`)
+        
+        // ลบ ProductOnCart ที่อ้างอิงสินค้านี้
+        const deletedCarts = await prisma.productOnCart.deleteMany({
+            where: {
+                productId: Number(id)
+            }
+        })
+        console.log(`Deleted ${deletedCarts.count} ProductOnCart records`)
+        
+        // ลบรูปภาพจากฐานข้อมูล
+        const deletedImages = await prisma.image.deleteMany({
+            where: {
+                productId: Number(id)
+            }
+        })
+        console.log(`Deleted ${deletedImages.count} Image records`)
+        
+        // Step 4 ลบสินค้า
         await prisma.product.delete({
             where: {
                 id: Number(id)
             }
         })
 
+        console.log(`Successfully deleted product with ID: ${id}`)
         res.send('Deleted Success')
     } catch (err) {
         console.log(err)
