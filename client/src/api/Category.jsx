@@ -23,3 +23,12 @@ export const removeCategory = async (token, id) => {
         }
     })
 }
+
+export const updateCategory = async (token, id, form) => {
+    // code body
+    return axios.put('http://localhost:5001/api/category/'+id, form, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

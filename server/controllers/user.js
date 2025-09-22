@@ -337,3 +337,155 @@ exports.getOrder = async (req, res) => {
   }
 };
 
+// 🏠 จัดการที่อยู่ผู้ใช้
+exports.getUserAddresses = async (req, res) => {
+  try {
+    const addresses = await prisma.userAddress.findMany({
+      where: { userId: Number(req.user.id) },
+      orderBy: { isDefault: "desc" },
+    });
+    res.json({ ok: true, addresses });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.saveUserAddress = async (req, res) => {
+  try {
+    const { fullName, phone, address, postalCode, isDefault } = req.body;
+    const userId = Number(req.user.id);
+
+    // ตรวจสอบจำนวนที่อยู่ที่มีอยู่
+    const existingAddresses = await prisma.userAddress.count({
+      where: { userId }
+    });
+
+    if (existingAddresses >= 5) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: "ถึงขีดจำกัดการบันทึกที่อยู่แล้ว (สูงสุด 5 ที่อยู่)" 
+      });
+    }
+
+    // ถ้าเป็น default ให้ยกเลิก default ของที่อยู่อื่นๆ
+    if (isDefault) {
+      await prisma.userAddress.updateMany({
+        where: { userId },
+        data: { isDefault: false }
+      });
+    }
+
+    const newAddress = await prisma.userAddress.create({
+      data: {
+        fullName,
+        phone,
+        address,
+        postalCode,
+        isDefault: isDefault || false,
+        userId
+      }
+    });
+
+    res.json({ ok: true, message: "บันทึกที่อยู่สำเร็จ", address: newAddress });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.updateUserAddress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullName, phone, address, postalCode, isDefault } = req.body;
+    const userId = Number(req.user.id);
+
+    // ตรวจสอบว่าที่อยู่นี้เป็นของ user นี้หรือไม่
+    const existingAddress = await prisma.userAddress.findFirst({
+      where: { id: Number(id), userId }
+    });
+
+    if (!existingAddress) {
+      return res.status(404).json({ ok: false, message: "ไม่พบที่อยู่" });
+    }
+
+    // ถ้าเป็น default ให้ยกเลิก default ของที่อยู่อื่นๆ
+    if (isDefault) {
+      await prisma.userAddress.updateMany({
+        where: { userId, id: { not: Number(id) } },
+        data: { isDefault: false }
+      });
+    }
+
+    const updatedAddress = await prisma.userAddress.update({
+      where: { id: Number(id) },
+      data: {
+        fullName,
+        phone,
+        address,
+        postalCode,
+        isDefault: isDefault || false
+      }
+    });
+
+    res.json({ ok: true, message: "อัปเดตที่อยู่สำเร็จ", address: updatedAddress });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.deleteUserAddress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = Number(req.user.id);
+
+    // ตรวจสอบว่าที่อยู่นี้เป็นของ user นี้หรือไม่
+    const existingAddress = await prisma.userAddress.findFirst({
+      where: { id: Number(id), userId }
+    });
+
+    if (!existingAddress) {
+      return res.status(404).json({ ok: false, message: "ไม่พบที่อยู่" });
+    }
+
+    await prisma.userAddress.delete({
+      where: { id: Number(id) }
+    });
+
+    res.json({ ok: true, message: "ลบที่อยู่สำเร็จ" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+// 👤 อัปเดตข้อมูลผู้ใช้
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const { fullName, phone } = req.body;
+    const userId = Number(req.user.id);
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        fullName,
+        phone
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        fullName: true,
+        phone: true,
+        role: true
+      }
+    });
+
+    res.json({ ok: true, message: "อัปเดตข้อมูลสำเร็จ", user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+

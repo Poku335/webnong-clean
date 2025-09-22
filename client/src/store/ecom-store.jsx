@@ -75,6 +75,9 @@ const ecomStore = (set, get) => ({
     });
     return res;
   },
+  setUser: (user) => {
+    set({ user });
+  },
   getCategory: async () => {
     try {
       if (get().useMock) {

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import useEcomStore from "../../store/ecom-store";
 import { useNavigate } from "react-router-dom";
+import { currentUser } from "../../api/auth";
 
 const Login = () => {
   // Javascript
@@ -26,6 +27,11 @@ const Login = () => {
     try {
       const res = await actionLogin(form);
       const role = res.data.payload.role;
+      
+      // ดึงข้อมูล user ที่สมบูรณ์
+      const userRes = await currentUser(res.data.token);
+      useEcomStore.getState().setUser(userRes.data.user);
+      
       roleRedirect(role);
       toast.success("ยินดีต้อนรับ");
     } catch (err) {

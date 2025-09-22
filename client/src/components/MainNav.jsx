@@ -101,11 +101,19 @@ function MainNav() {
                 onClick={toggleDropdown}
                 className="flex items-center gap-2 hover:bg-secondary-100 px-3 py-2 rounded-lg transition-all duration-200"
               >
-                <img
-                  className="w-14 h-14 rounded-full shadow-soft border-2 border-primary-200"
-                  src="https://github.com/shadcn.png"
-                  alt="user"
-                />
+                <div className="flex items-center gap-3">
+                  <img
+                    className="w-14 h-14 rounded-full shadow-soft border-2 border-primary-200"
+                    src="https://github.com/shadcn.png"
+                    alt="user"
+                  />
+                  <div className="hidden md:block text-left">
+                    <p className="text-sm font-medium text-secondary-900">
+                      {user.fullName || user.name || 'ผู้ใช้'}
+                    </p>
+                    <p className="text-xs text-secondary-500">{user.email}</p>
+                  </div>
+                </div>
                 <ChevronDown className="text-secondary-600 w-4 h-4" />
               </button>
 
@@ -122,10 +130,16 @@ function MainNav() {
                       </Link>
                     )}
                     <Link
+                      to="/user/settings"
+                      className="block px-4 py-3 hover:bg-primary-50 hover:text-primary-600 text-secondary-700 transition-all duration-150 rounded-lg"
+                    >
+                      ตั้งค่าบัญชี
+                    </Link>
+                    <Link
                       to="/user/history"
                       className="block px-4 py-3 hover:bg-primary-50 hover:text-primary-600 text-secondary-700 transition-all duration-150 rounded-lg"
                     >
-                      History
+                      ประวัติการสั่งซื้อ
                     </Link>
                     <button
                       onClick={() => {

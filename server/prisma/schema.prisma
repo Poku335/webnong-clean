@@ -18,6 +18,8 @@ model User {
   email     String   @unique
   password  String?
   name      String?
+  fullName  String?
+  phone     String?
   picture   String?
   role      String   @default("user")
   enabled   Boolean  @default(true)
@@ -25,8 +27,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders Order[]
-  carts  Cart[]
+  orders   Order[]
+  carts    Cart[]
+  addresses UserAddress[]
 }
 
 model Product {
@@ -72,6 +75,7 @@ model ProductOnOrder {
 model Category {
   id        Int      @id @default(autoincrement())
   name      String
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Product[]
@@ -107,4 +111,17 @@ model Image {
   updatedAt DateTime @updatedAt
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
+}
+
+model UserAddress {
+  id          Int      @id @default(autoincrement())
+  fullName    String
+  phone       String
+  address     String
+  postalCode  String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

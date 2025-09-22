@@ -115,7 +115,7 @@ const FormProduct = () => {
             value={form.categoryId}
           >
             <option value="" disabled>
-              เลือกประเภทสินค้า
+              เลือกหมวดหมู่สินค้า
             </option>
             {categories.map((item, index) => (
               <option key={index} value={item.id}>

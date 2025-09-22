@@ -14,7 +14,7 @@ const Home = () => {
 
       {/* Categories Section */}
       <section className="py-8">
-        <h2 className="section-title">ประเภทสินค้า</h2>
+        <h2 className="section-title">หมวดหมู่สินค้า</h2>
         <Categories />
       </section>
 

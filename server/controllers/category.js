@@ -3,10 +3,11 @@ const prisma = require("../config/prisma")
 exports.create = async(req,res)=>{
     try{
         // code
-        const { name } = req.body
+        const { name, image } = req.body
         const category = await prisma.category.create({
             data:{
-                name: name
+                name: name,
+                image: image
             }
         })
         res.send(category)
@@ -25,6 +26,27 @@ exports.list = async(req,res)=>{
         res.status(500).json({ message : "Server error" })
     }
 }
+exports.update = async(req,res)=>{
+    try{
+        // code
+        const { id } = req.params
+        const { name, image } = req.body
+        const category = await prisma.category.update({
+            where:{ 
+                id: Number(id)
+             },
+            data: {
+                name: name,
+                image: image
+            }
+        })
+        res.send(category)
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ message : "Server error" })
+    }
+}
+
 exports.remove = async(req,res)=>{
     try{
         // code

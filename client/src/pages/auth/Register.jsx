@@ -10,7 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 const registerSchema = z
   .object({
+    fullName: z.string().min(1, { message: "กรุณากรอกชื่อ-นามสกุล" }),
     email: z.string().email({ message: "Invalid email!!!" }),
+    phone: z.string().optional(),
     password: z.string().min(8, { message: "Password ต้องมากกว่า 8 ตัวอักษร" }),
     confirmPassword: z.string(),
   })
@@ -78,8 +80,23 @@ const Register = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
+              <label htmlFor="fullName" className="block text-sm font-medium text-secondary-700 mb-2">
+                ชื่อ-นามสกุล *
+              </label>
+              <input
+                {...register("fullName")}
+                id="fullName"
+                placeholder="กรอกชื่อ-นามสกุลของคุณ"
+                className={`input-field ${errors.fullName && "border-red-500 focus:ring-red-500"}`}
+              />
+              {errors.fullName && (
+                <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+              )}
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-secondary-700 mb-2">
-                อีเมล
+                อีเมล *
               </label>
               <input
                 {...register("email")}
@@ -89,6 +106,21 @@ const Register = () => {
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-secondary-700 mb-2">
+                เบอร์โทรศัพท์
+              </label>
+              <input
+                {...register("phone")}
+                id="phone"
+                placeholder="กรอกเบอร์โทรศัพท์ของคุณ"
+                className={`input-field ${errors.phone && "border-red-500 focus:ring-red-500"}`}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
               )}
             </div>
 

@@ -5,6 +5,7 @@ import Home from '../pages/Home'
 import Shop from '../pages/Shop'
 import Cart from '../pages/Cart'
 import History from '../pages/user/History'
+import Settings from '../pages/user/Settings'
 import Checkout from '../pages/Checkout'
 import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
             { index: true, element: <HomeUser /> },
             { path: 'payment', element: <Payment /> },
             { path: 'history', element: <History /> },
+            { path: 'settings', element: <Settings /> },
         ]
     }
 

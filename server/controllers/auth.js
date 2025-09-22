@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 exports.register = async (req, res) => {
     try {
         //code
-        const { email, password } = req.body
+        const { email, password, fullName, phone } = req.body
 
         // Step 1 Validate body
         if (!email) {
@@ -14,6 +14,9 @@ exports.register = async (req, res) => {
         }
         if (!password) {
             return res.status(400).json({ message: "กรุณากรอกรหัสผ่าน" })
+        }
+        if (!fullName) {
+            return res.status(400).json({ message: "กรุณากรอกชื่อ-นามสกุล" })
         }
 
         // Step 2 Check Email in DB already ?
@@ -23,7 +26,7 @@ exports.register = async (req, res) => {
             }
         })
         if (user) {
-            return res.status(400).json({ message: "ไม่มีชื่อผู้ใช้นี้ในระบบ" })
+            return res.status(400).json({ message: "อีเมลนี้มีอยู่ในระบบแล้ว" })
         }
         // Step 3 HashPassword
         const hashPassword = await bcrypt.hash(password, 10)
@@ -32,7 +35,9 @@ exports.register = async (req, res) => {
         await prisma.user.create({
             data: {
                 email: email,
-                password: hashPassword
+                password: hashPassword,
+                fullName: fullName,
+                phone: phone
             }
         })
 
@@ -92,6 +97,8 @@ exports.currentUser = async (req, res) => {
                 id: true,
                 email: true,
                 name: true,
+                fullName: true,
+                phone: true,
                 role: true
             }
         })
