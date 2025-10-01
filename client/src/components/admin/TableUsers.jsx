@@ -38,7 +38,7 @@ const TableUsers = () => {
     changeUserStatus(token, value)
       .then((res) => {
         handleGetUsers(token);
-        // alert("Update Status Success!!"); // ไม่แสดง alert สำหรับการกระทำปกติ
+
       })
       .catch((err) => console.log(err));
   };
@@ -48,7 +48,7 @@ const TableUsers = () => {
     changeUserRole(token, value)
       .then((res) => {
         handleGetUsers(token);
-        // alert("Update Role Success!!"); // ไม่แสดง alert สำหรับการกระทำปกติ
+
       })
       .catch((err) => console.log(err));
   };
@@ -74,18 +74,18 @@ const TableUsers = () => {
     >
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <Users className="w-8 h-8 text-orange-500" />
+                <Users className="w-8 h-8 text-orange-400" />
                 จัดการผู้ใช้งาน
               </h1>
               <p className="text-gray-600">จัดการสิทธิ์และสถานะของผู้ใช้งานทั้งหมด</p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="bg-orange-100 px-4 py-2 rounded-xl">
-                <span className="text-orange-700 font-semibold text-sm">ทั้งหมด: {users.length}</span>
+              <div className="bg-orange-50 px-4 py-2 rounded-xl">
+                <span className="text-orange-600 font-semibold text-sm">ทั้งหมด: {users.length}</span>
               </div>
               <div className="bg-green-100 px-4 py-2 rounded-xl">
                 <span className="text-green-700 font-semibold text-sm">ใช้งาน: {users.filter(u => u.enabled).length}</span>
@@ -98,7 +98,7 @@ const TableUsers = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div>
@@ -155,12 +155,12 @@ const TableUsers = () => {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full table-fixed min-w-[800px]">
-              <thead className="bg-orange-100">
+              <thead className="bg-orange-50">
                 <tr>
-                  <th className="w-16 px-3 py-4 text-center text-xs font-bold text-gray-900">#</th>
+                  <th className="w-16 px-3 py-4 text-center text-xs font-bold text-gray-900"></th>
                   <th className="w-64 px-3 py-4 text-left text-xs font-bold text-gray-900">
                     <Mail className="w-4 h-4 inline mr-1" />
                     อีเมล
@@ -185,14 +185,14 @@ const TableUsers = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
-                      className="hover:bg-orange-100/50 transition-all duration-300"
+                      className="hover:bg-orange-50/50 transition-all duration-300"
                     >
                       <td className="px-3 py-4 text-xs font-semibold text-gray-900 text-center">
                         {index + 1}
                       </td>
                       <td className="px-3 py-4">
                         <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center flex-shrink-0">
                             <Mail className="w-4 h-4 text-white" />
                           </div>
                           <div className="min-w-0 flex-1">

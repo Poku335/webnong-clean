@@ -86,11 +86,11 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-orange-500 text-white p-6 rounded-t-2xl">
+            <div className="bg-orange-400 text-white p-6 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold">รายละเอียดคำสั่งซื้อ</h2>
-                  <p className="text-orange-100">Order ID: #{order.id}</p>
+                  <p className="text-orange-50">Order ID: #{order.id}</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -176,7 +176,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
               </div>
 
               {/* Products */}
-              <div className="bg-orange-100 rounded-xl p-6">
+              <div className="bg-orange-50 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                   <Package className="w-5 h-5 mr-2" />
                   สินค้าที่สั่งซื้อ
@@ -190,7 +190,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                           <p className="text-sm text-gray-600">จำนวน: {item.count} ชิ้น</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-orange-600">{numberFormat(item.price)}</p>
+                          <p className="font-semibold text-orange-500">{numberFormat(item.price)}</p>
                           <p className="text-sm text-gray-600">ต่อชิ้น</p>
                         </div>
                       </div>

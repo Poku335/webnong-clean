@@ -91,18 +91,18 @@ const FormProduct = () => {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="space-y-4">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-4">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <Package className="w-8 h-8 text-orange-500" />
+                <Package className="w-8 h-8 text-orange-400" />
                 จัดการสินค้า
               </h1>
               <p className="text-gray-600">เพิ่ม แก้ไข และจัดการสินค้าทั้งหมด</p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="bg-orange-100 px-4 py-2 rounded-xl">
-                <span className="text-orange-700 font-semibold text-sm">ทั้งหมด: {products.length}</span>
+              <div className="bg-orange-50 px-4 py-2 rounded-xl">
+                <span className="text-orange-600 font-semibold text-sm">ทั้งหมด: {products.length}</span>
               </div>
               <div className="bg-green-100 px-4 py-2 rounded-xl">
                 <span className="text-green-700 font-semibold text-sm">หมวดหมู่: {categories.length}</span>
@@ -112,9 +112,9 @@ const FormProduct = () => {
         </div>
 
         {/* Add Product Form */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-4">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-4">
           <div className="flex items-center gap-2 mb-6">
-            <Plus className="w-5 h-5 text-orange-500" />
+            <Plus className="w-5 h-5 text-orange-400" />
             <h2 className="text-xl font-bold text-gray-900">เพิ่มสินค้าใหม่</h2>
           </div>
           
@@ -228,7 +228,7 @@ const FormProduct = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-4">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Search */}
             <div>
@@ -271,12 +271,12 @@ const FormProduct = () => {
         </div>
 
         {/* Products Table */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
-              <thead className="bg-orange-100">
+              <thead className="bg-orange-50">
                 <tr>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-12">#</th>
+                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-12"></th>
                   <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-20">
                     <ImageIcon className="w-4 h-4 inline mr-1" />
                     รูปภาพ
@@ -304,13 +304,13 @@ const FormProduct = () => {
                 {filteredProducts.map((item, index) => (
                   <tr
                     key={item.id}
-                    className="hover:bg-orange-100/50 transition-colors duration-200"
+                    className="hover:bg-orange-50/50 transition-colors duration-200"
                   >
                       <td className="px-2 py-3 text-xs font-semibold text-gray-900 text-center">
                         {index + 1}
                       </td>
                       <td className="px-2 py-3 text-center">
-                        {item.images.length > 0 ? (
+                        {item.images && item.images.length > 0 ? (
                           <img
                             className="w-12 h-12 rounded-lg shadow-md object-cover mx-auto"
                             src={item.images[0].url}
@@ -334,7 +334,7 @@ const FormProduct = () => {
                         <p className="text-xs text-gray-700 line-clamp-2">{item.description}</p>
                       </td>
                       <td className="px-2 py-3 text-center">
-                        <span className="font-semibold text-orange-600 text-xs">
+                        <span className="font-semibold text-orange-500 text-xs">
                           {numberFormat(item.price)}
                         </span>
                       </td>

@@ -45,29 +45,28 @@ const Layout = () => {
             </div>
             
             <div>
-              <h4 className="text-lg font-semibold mb-4">เมนูหลัก</h4>
+              <h4 className="text-lg font-semibold mb-4 text-gray-300">เมนูหลัก</h4>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/" className="hover:text-orange-400 transition-colors">หน้าแรก</a></li>
-                <li><a href="/shop" className="hover:text-orange-400 transition-colors">ร้านค้า</a></li>
-                <li><a href="/cart" className="hover:text-orange-400 transition-colors">ตะกร้า</a></li>
+                <li><a href="/" className="hover:text-orange-300 transition-colors">หน้าแรก</a></li>
+                <li><a href="/shop" className="hover:text-orange-300 transition-colors">ร้านค้า</a></li>
+                <li><a href="/cart" className="hover:text-orange-300 transition-colors">ตะกร้า</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="text-lg font-semibold mb-4">บัญชีผู้ใช้</h4>
+              <h4 className="text-lg font-semibold mb-4 text-gray-300">บัญชีผู้ใช้</h4>
               <ul className="space-y-2 text-gray-300">
-                <li><a href="/login" className="hover:text-orange-400 transition-colors">เข้าสู่ระบบ</a></li>
-                <li><a href="/register" className="hover:text-orange-400 transition-colors">สมัครสมาชิก</a></li>
-                <li><a href="/user/history" className="hover:text-orange-400 transition-colors">ประวัติการสั่งซื้อ</a></li>
+                <li><a href="/login" className="hover:text-orange-300 transition-colors">เข้าสู่ระบบ</a></li>
+                <li><a href="/register" className="hover:text-orange-300 transition-colors">สมัครสมาชิก</a></li>
+                <li><a href="/user/history" className="hover:text-orange-300 transition-colors">ประวัติการสั่งซื้อ</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="text-lg font-semibold mb-4">ติดต่อเรา</h4>
+              <h4 className="text-lg font-semibold mb-4 text-gray-300">ติดต่อเรา</h4>
               <ul className="space-y-2 text-gray-300">
-                <li>📞 02-123-4567</li>
-                <li>📧 info@ecommerce.com</li>
-                <li>📍 กรุงเทพมหานคร</li>
+                <li>Tel:02-123-4567</li>
+                <li>ติดต่อ:น้องเอิร์น.com</li>
               </ul>
             </div>
           </div>
@@ -75,7 +74,7 @@ const Layout = () => {
           <hr className="border-gray-700 my-8" />
           
           <div className="text-center text-gray-400">
-            <p>&copy; 2024 E-Commerce. All rights reserved.</p>
+            <p>มอใหม่ ฟิชชิ่ง</p>
           </div>
         </div>
       </footer>

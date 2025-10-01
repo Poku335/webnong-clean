@@ -1,12 +1,12 @@
 // rafce
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  CheckCircle, 
-  Clock, 
+import {
+  Search,
+  Filter,
+  Eye,
+  CheckCircle,
+  Clock,
   XCircle,
   CreditCard,
   User,
@@ -62,7 +62,7 @@ const TableOrders = () => {
     changeOrderStatus(token, orderId, orderStatus)
       .then((res) => {
         console.log('Status change response:', res);
-             // alert("Update Status Success!!!"); // ไม่แสดง alert สำหรับการกระทำปกติ
+        // alert("Update Status Success!!!"); // ไม่แสดง alert สำหรับการกระทำปกติ
         handleGetOrder(token);
       })
       .catch((err) => {
@@ -107,7 +107,7 @@ const TableOrders = () => {
     return orders.filter((o) => {
       const okStatus = statusFilter === "ALL" || o.orderStatus === statusFilter;
       const okPaymentMethod = paymentMethodFilter === "ALL" || o.paymentMethod === paymentMethodFilter;
-      const okSearch = !searchTerm || 
+      const okSearch = !searchTerm ||
         o.orderedBy.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         o.orderedBy.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         o.productsOnOrders?.some(p => p.product.title.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -122,7 +122,7 @@ const TableOrders = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-400 mx-auto mb-4"></div>
           <p className="text-gray-600">กำลังโหลดข้อมูลคำสั่งซื้อ...</p>
         </div>
       </div>
@@ -132,15 +132,15 @@ const TableOrders = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">จัดการคำสั่งซื้อ</h1>
             <p className="text-gray-600">ตรวจสอบและจัดการคำสั่งซื้อทั้งหมด</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="bg-orange-100 px-4 py-2 rounded-xl">
-              <span className="text-orange-700 font-semibold">ทั้งหมด: {orders.length}</span>
+            <div className="bg-orange-50 px-4 py-2 rounded-xl">
+              <span className="text-orange-600 font-semibold">ทั้งหมด: {orders.length}</span>
             </div>
             <div className="bg-yellow-100 px-4 py-2 rounded-xl">
               <span className="text-yellow-700 font-semibold">รอดำเนินการ: {orders.filter(o => o.orderStatus === "รอดำเนินการ").length}</span>
@@ -153,7 +153,7 @@ const TableOrders = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           {/* Search */}
           <div className="lg:col-span-2">
@@ -238,12 +238,12 @@ const TableOrders = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full table-auto">
-            <thead className="bg-orange-100">
+            <thead className="bg-orange-50">
               <tr>
-                <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-12">#</th>
+                <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-12"></th>
                 <th className="px-3 py-4 text-left text-sm font-bold text-gray-900 w-48">
                   <User className="w-4 h-4 inline mr-2" />
                   ลูกค้า
@@ -277,14 +277,14 @@ const TableOrders = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="hover:bg-orange-100/50 transition-all duration-300"
+                    className="hover:bg-orange-50/50 transition-all duration-300"
                   >
                     <td className="px-3 py-4 text-sm font-semibold text-gray-900 text-center">
                       {index + 1}
                     </td>
                     <td className="px-3 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center flex-shrink-0">
                           <User className="w-4 h-4 text-white" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -307,20 +307,20 @@ const TableOrders = () => {
                           </div>
                         ))}
                         {item.productsOnOrders?.length > 1 && (
-                          <p className="text-sm text-orange-600 font-medium">
+                          <p className="text-sm text-orange-500 font-medium">
                             +{item.productsOnOrders.length - 1} รายการ
                           </p>
                         )}
                       </div>
                     </td>
-                    <td className="px-3 py-4 text-sm font-bold text-orange-600 text-right">
+                    <td className="px-3 py-4 text-sm font-bold text-orange-500 text-right">
                       {numberFormat(item.cartTotal)} บาท
                     </td>
                     <td className="px-3 py-4 text-center">
                       <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-semibold border ${getStatusColor(item.orderStatus)}`}>
                         {item.orderStatus === "รอดำเนินการ" ? <Clock className="w-2.5 h-2.5 mr-1" /> : <CheckCircle className="w-2.5 h-2.5 mr-1" />}
                         <span className="hidden lg:inline">{item.orderStatus}</span>
-                        <span className="lg:hidden">{item.orderStatus === "รอดำเนินการ" ? "รอ" : "เสร็จ"}</span>
+                        <span className="lg:hidden">{item.orderStatus === "รอดำเนินการ" ? "รอดำเนินการ" : "ชำระเงินสำเร็จ"}</span>
                       </span>
                     </td>
                     <td className="px-3 py-4 text-center">
@@ -329,8 +329,8 @@ const TableOrders = () => {
                         onChange={(e) => handleChangeOrderStatus(token, item.id, e.target.value)}
                         className="input-field text-sm py-2 px-2 w-full"
                       >
-                        <option value="รอดำเนินการ">รอ</option>
-                        <option value="ชำระเงินแล้ว">เสร็จ</option>
+                        <option value="รอดำเนินการ">รอดำเนินการ</option>
+                        <option value="ชำระเงินแล้ว">ชำระเงินสำเร็จ</option>
                       </select>
                     </td>
                     <td className="px-3 py-4 text-center">
@@ -349,7 +349,7 @@ const TableOrders = () => {
                             <img
                               src={item.paymentSlip}
                               alt="Payment Slip"
-                              className="w-12 h-12 object-cover rounded border border-orange-200 cursor-pointer hover:border-orange-400 transition-all duration-300"
+                              className="w-12 h-12 object-cover rounded border border-orange-100 cursor-pointer hover:border-orange-300 transition-all duration-300"
                               onClick={() => handleImageClick(item.paymentSlip)}
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded transition-all duration-300 flex items-center justify-center">

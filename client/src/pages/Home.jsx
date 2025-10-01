@@ -28,7 +28,6 @@ const Home = () => {
         <div className="text-center mb-8">
           <h2 className="section-title">สินค้าขายดี</h2>
           <p className="section-subtitle">
-            สินค้าที่ได้รับความนิยมสูงสุดจากลูกค้า
           </p>
         </div>
         <BestSeller />
@@ -39,14 +38,13 @@ const Home = () => {
         <div className="text-center mb-8">
           <h2 className="section-title">สินค้าใหม่</h2>
           <p className="section-subtitle">
-            สินค้าใหม่ล่าสุดที่เพิ่งเข้ามาในร้าน
           </p>
         </div>
         <NewProduct />
       </section>
 
       {/* Thank You Section */}
-      <section className="py-8 bg-orange-100 rounded-3xl animate-slide-up">
+      <section className="py-8 bg-orange-50 rounded-3xl animate-slide-up">
         <div className="container-custom">
           <div className="text-center">
             <h2 className="section-title">มอใหม่ ฟิชชิ่ง</h2>

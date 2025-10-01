@@ -100,9 +100,9 @@ export default function PaymentCheck() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-8">
           <div className="flex flex-col items-center gap-4">
-            <Loader className="w-12 h-12 animate-spin text-orange-500" />
+            <Loader className="w-12 h-12 animate-spin text-orange-400" />
             <p className="text-gray-600 font-medium">กำลังโหลดข้อมูลการชำระเงิน...</p>
           </div>
         </div>
@@ -113,15 +113,15 @@ export default function PaymentCheck() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-8 text-center">
-          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CreditCard className="w-8 h-8 text-orange-500" />
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-8 text-center">
+          <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CreditCard className="w-8 h-8 text-orange-400" />
           </div>
           <p className="text-red-600 mb-4">{error}</p>
           {error === "กรุณาเข้าสู่ระบบ" || error === "กรุณาเข้าสู่ระบบใหม่" ? (
             <a 
               href="/login" 
-              className="inline-flex items-center justify-center px-6 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors duration-200"
+              className="inline-flex items-center justify-center px-6 py-3 bg-orange-400 text-white font-semibold rounded-xl hover:bg-orange-500 transition-colors duration-200"
             >
               เข้าสู่ระบบ
             </a>
@@ -148,18 +148,18 @@ export default function PaymentCheck() {
     >
       <div className="space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <CreditCard className="w-8 h-8 text-orange-500" />
+                <CreditCard className="w-8 h-8 text-orange-400" />
                 ตรวจสอบการเงิน
               </h1>
               <p className="text-gray-600">ตรวจสอบและจัดการสถานะการชำระเงิน</p>
             </div>
             <div className="flex items-center gap-4">
-              <div className="bg-orange-100 px-4 py-2 rounded-xl">
-                <span className="text-orange-700 font-semibold text-sm">ทั้งหมด: {orders.length}</span>
+              <div className="bg-orange-50 px-4 py-2 rounded-xl">
+                <span className="text-orange-600 font-semibold text-sm">ทั้งหมด: {orders.length}</span>
               </div>
               <div className="bg-green-100 px-4 py-2 rounded-xl">
                 <span className="text-green-700 font-semibold text-sm">ชำระแล้ว: {orders.filter(o => o.paymentStatus === 'complete').length}</span>
@@ -179,7 +179,7 @@ export default function PaymentCheck() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div>
@@ -236,10 +236,10 @@ export default function PaymentCheck() {
         </div>
 
         {/* Orders Table */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full table-fixed min-w-[1200px]">
-              <thead className="bg-orange-100">
+              <thead className="bg-orange-50">
                 <tr>
                   <th className="w-20 px-3 py-4 text-center text-xs font-bold text-gray-900">#</th>
                   <th className="w-48 px-3 py-4 text-left text-xs font-bold text-gray-900">
@@ -275,14 +275,14 @@ export default function PaymentCheck() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
-                      className="hover:bg-orange-100/50 transition-all duration-300"
+                      className="hover:bg-orange-50/50 transition-all duration-300"
                     >
                       <td className="px-3 py-4 text-xs font-semibold text-gray-900 text-center">
                         #{order.id}
                       </td>
                       <td className="px-3 py-4">
                         <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center flex-shrink-0">
                             <User className="w-4 h-4 text-white" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -313,7 +313,7 @@ export default function PaymentCheck() {
                         </span>
                       </td>
                       <td className="px-3 py-4 text-center">
-                        <span className="font-semibold text-orange-600 text-sm">
+                        <span className="font-semibold text-orange-500 text-sm">
                           {numberFormat(order.cartTotal)}
                         </span>
                       </td>
@@ -387,7 +387,7 @@ export default function PaymentCheck() {
         </div>
 
         {filteredOrders.length === 0 && (
-          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-8 text-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-100/50 p-8 text-center">
             <CreditCard className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 text-lg">ไม่พบข้อมูลการชำระเงิน</p>
           </div>
