@@ -1,6 +1,6 @@
 // rafce
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify' // Replaced with window.alert
 import Resize from 'react-image-file-resizer'
 import { removeFiles, uploadFiles } from '../../api/product'
 import useEcomStore from '../../store/ecom-store'
@@ -18,7 +18,7 @@ const CategoryImageUpload = ({ image, setImage }) => {
 
             // Validate
             if (!file.type.startsWith('image/')) {
-                toast.error('กรุณาเลือกไฟล์รูปภาพ')
+                alert('กรุณาเลือกไฟล์รูปภาพ')
                 setIsLoading(false)
                 return
             }
@@ -38,12 +38,12 @@ const CategoryImageUpload = ({ image, setImage }) => {
                             console.log(res)
                             setImage(res.data.url)
                             setIsLoading(false)
-                            toast.success('อัปโหลดรูปภาพสำเร็จ')
+                            // alert('อัปโหลดรูปภาพสำเร็จ') // ไม่แสดง alert สำหรับการกระทำปกติ
                         })
                         .catch((err) => {
                             console.log(err)
                             setIsLoading(false)
-                            toast.error('อัปโหลดรูปภาพไม่สำเร็จ')
+                            alert('อัปโหลดรูปภาพไม่สำเร็จ')
                         })
                 },
                 "base64"
@@ -60,13 +60,13 @@ const CategoryImageUpload = ({ image, setImage }) => {
             removeFiles(token, publicId)
                 .then((res) => {
                     setImage('')
-                    toast.success('ลบรูปภาพสำเร็จ')
+                    // alert('ลบรูปภาพสำเร็จ') // ไม่แสดง alert สำหรับการกระทำปกติ
                 })
                 .catch((err) => {
                     console.log(err)
                     // Even if delete fails, clear the image from form
                     setImage('')
-                    toast.success('ลบรูปภาพสำเร็จ')
+                    // alert('ลบรูปภาพสำเร็จ') // ไม่แสดง alert สำหรับการกระทำปกติ
                 })
         }
     }

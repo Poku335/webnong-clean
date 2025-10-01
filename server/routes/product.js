@@ -24,6 +24,15 @@ router.post('/search/filters', searchFilters)
 router.post('/images', authCheck, adminCheck, createImages)
 router.post('/removeimages', authCheck, adminCheck, removeImage)
 
+// User upload routes (no admin check)
+router.post('/user-images', authCheck, createImages)
+
+// User payment slip upload (no admin check) - OLD METHOD
+router.post('/user-payment-upload', authCheck, createImages)
+
+// NEW: User payment slip upload using FormData
+router.post('/user-payment-upload-formdata', authCheck, require('../controllers/upload').uploadSingle, require('../controllers/upload').handleUpload)
+
 
 
 

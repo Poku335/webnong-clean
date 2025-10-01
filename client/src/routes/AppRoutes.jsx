@@ -1,6 +1,7 @@
 // rafce
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import ScrollToTop from '../components/ScrollToTop'
 import Home from '../pages/Home'
 import Shop from '../pages/Shop'
 import Cart from '../pages/Cart'
@@ -23,10 +24,16 @@ import ProtectRouteAdmin from './ProtectRouteAdmin'
 import EditProduct from '../pages/admin/EditProduct'
 import Payment from '../pages/user/Payment'
 import ManageOrders from '../pages/admin/ManageOrders'
+import QRCodeManagement from '../pages/admin/QRCodeManagement'
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Layout />,
+        element: (
+            <>
+                <ScrollToTop />
+                <Layout />
+            </>
+        ),
         children: [
             { index: true, element: <Home /> },
             { path: 'shop', element: <Shop /> },
@@ -39,7 +46,12 @@ const router = createBrowserRouter([
     },
     {
         path: '/admin',
-        element: <ProtectRouteAdmin element={<LayoutAdmin />} />,
+        element: (
+            <>
+                <ScrollToTop />
+                <ProtectRouteAdmin element={<LayoutAdmin />} />
+            </>
+        ),
         children: [
             { index: true, element: <Dashboard /> },
             { path: 'category', element: <Category /> },
@@ -47,12 +59,18 @@ const router = createBrowserRouter([
             { path: 'product/:id', element: <EditProduct /> },
             { path: 'manage', element: <Manage /> },
             { path: 'orders', element: <ManageOrders /> },
+            { path: 'qr-management', element: <QRCodeManagement /> },
         ]
     },
     {
         path: '/user',
         // element: <LayoutUser />,
-        element: <ProtectRouteUser element={<LayoutUser />} />,
+        element: (
+            <>
+                <ScrollToTop />
+                <ProtectRouteUser element={<LayoutUser />} />
+            </>
+        ),
         children: [
             { index: true, element: <HomeUser /> },
             { path: 'payment', element: <Payment /> },
@@ -67,9 +85,7 @@ const router = createBrowserRouter([
 
 const AppRoutes = () => {
     return (
-        <>
-            <RouterProvider router={router} />
-        </>
+        <RouterProvider router={router} />
     )
 }
 

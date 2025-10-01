@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const { readdirSync } = require('fs');
 const cors = require('cors');
+const path = require('path');
 const { PrismaClient } = require('@prisma/client'); 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,9 @@ const prisma = new PrismaClient();
 app.use(morgan('dev'));
 app.use(express.json({ limit: '20mb' }));
 app.use(cors());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 readdirSync('./routes').map((c) => app.use('/api', require('./routes/' + c)));
 
@@ -37,5 +41,5 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -9,8 +9,8 @@ const LayoutAdmin = () => {
             <SidebarAdmin />
             <div className='flex-1 flex flex-col'>
                 <HeaderAdmin />
-                <main className='flex-1 p-6 bg-secondary-50 overflow-y-auto'>
-                    <div className="container-custom">
+                <main className='flex-1 p-4 bg-gray-50 overflow-y-auto'>
+                    <div className="max-w-full">
                         <Outlet />
                     </div>
                 </main>

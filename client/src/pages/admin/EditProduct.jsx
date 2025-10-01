@@ -4,7 +4,9 @@ import FormEditProduct from '../../components/admin/FormEditProduct'
 
 const EditProduct = () => {
     return (
-        <div><FormEditProduct /></div>
+        <div className="min-h-screen bg-gray-50">
+            <FormEditProduct />
+        </div>
     )
 }
 

@@ -18,6 +18,11 @@ exports.register = async (req, res) => {
         if (!fullName) {
             return res.status(400).json({ message: "กรุณากรอกชื่อ-นามสกุล" })
         }
+        
+        // Validate phone number if provided
+        if (phone && !/^[0-9]{10}$/.test(phone)) {
+            return res.status(400).json({ message: "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 ตัว" })
+        }
 
         // Step 2 Check Email in DB already ?
         const user = await prisma.user.findFirst({

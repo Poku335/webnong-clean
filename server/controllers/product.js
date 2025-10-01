@@ -311,10 +311,13 @@ exports.createImages = async (req, res) => {
     try {
         //code
         // console.log(req.body)
-        const result = await cloudinary.uploader.upload(req.body.image, {
+        const { image, folder } = req.body;
+        const folderName = folder || 'Ecom2024';
+        
+        const result = await cloudinary.uploader.upload(image, {
             public_id: `Roitai-${Date.now()}`,
             resource_type: 'auto',
-            folder: 'Ecom2024'
+            folder: folderName
         })
         res.send(result)
     } catch (err) {

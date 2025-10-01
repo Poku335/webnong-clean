@@ -1,12 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import useEcomStore from "../../store/ecom-store";
-import axios from "axios";
 import "./Payment.css";
 
 const Payment = () => {
-  const token = useEcomStore((s) => s.token);
-  const clearCart = useEcomStore((s) => s.clearCart);
   const [status, setStatus] = useState("loading");
   const navigate = useNavigate();
   const hasCalled = useRef(false); // ✅ ใช้ ref เพื่อกันการยิงซ้ำ
@@ -15,42 +11,18 @@ const Payment = () => {
     if (hasCalled.current) return;
     hasCalled.current = true;
 
-    const finalizeOrder = async () => {
-      try {
-        const res = await axios.post(
-          "http://localhost:5001/api/user/finalize-order",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (res.data.ok) {
-          // ✅ เคลียร์ตะกร้าฝั่ง client ให้สอดคล้องกับ server
-          clearCart();
-          setStatus("success");
-          setTimeout(() => navigate("/user/history"), 3000);
-        } else {
-          console.error("Finalize failed:", res.data.message);
-          setStatus("error");
-        }
-      } catch (err) {
-        console.error("Finalize error:", err.response?.data || err.message);
-        setStatus("error");
-      }
-    };
-
-    finalizeOrder();
-  }, [token, navigate, clearCart]);
+    // เนื่องจาก order ถูกสร้างแล้วในหน้า checkout
+    // หน้า Payment นี้ควรแสดงผลสำเร็จทันที
+    setStatus("success");
+    setTimeout(() => navigate("/user/history"), 3000);
+  }, [navigate]);
 
   const renderContent = () => {
     if (status === "loading") {
       return (
         <div className="payment-message loading">
           <div className="spinner" />
-          <p>กำลังดำเนินการชำระเงิน กรุณารอสักครู่...</p>
+          <p>กำลังประมวลผลการสั่งซื้อ กรุณารอสักครู่...</p>
         </div>
       );
     }
@@ -58,16 +30,16 @@ const Payment = () => {
     if (status === "success") {
       return (
         <div className="payment-message success">
-          <h2>✅ ชำระเงินสำเร็จแล้ว</h2>
-          <p>ระบบกำลังพาคุณไปยังหน้าประวัติการสั่งซื้อ...</p>
+          <h2>✅ สั่งซื้อสำเร็จแล้ว</h2>
+          <p>ขอบคุณสำหรับการสั่งซื้อ! ระบบกำลังพาคุณไปยังหน้าประวัติการสั่งซื้อ...</p>
         </div>
       );
     }
 
     return (
       <div className="payment-message error">
-        <h2>❌ เกิดข้อผิดพลาดในการชำระเงิน</h2>
-        <p>กรุณาลองใหม่อีกครั้ง หรือใช้ช่องทางอื่น</p>
+        <h2>❌ เกิดข้อผิดพลาดในการประมวลผล</h2>
+        <p>กรุณาลองใหม่อีกครั้ง หรือติดต่อเจ้าหน้าที่</p>
       </div>
     );
   };

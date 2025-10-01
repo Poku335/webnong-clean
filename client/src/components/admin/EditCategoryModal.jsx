@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { updateCategory } from '../../api/Category'
 import useEcomStore from '../../store/ecom-store'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify' // Replaced with window.alert
 import CategoryImageUpload from './CategoryImageUpload'
 import { X } from 'lucide-react'
 
@@ -22,18 +22,18 @@ const EditCategoryModal = ({ isOpen, onClose, category, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!name.trim()) {
-            return toast.warning('กรุณากรอกชื่อหมวดหมู่')
+            return alert('กรุณากรอกชื่อหมวดหมู่')
         }
 
         setLoading(true)
         try {
             const res = await updateCategory(token, category.id, { name: name.trim(), image })
-            toast.success(`แก้ไข "${res.data.name}" สำเร็จ`)
+            // alert(`แก้ไข "${res.data.name}" สำเร็จ`) // ไม่แสดง alert สำหรับการกระทำปกติ
             onSuccess()
             onClose()
         } catch (err) {
             console.log(err)
-            toast.error('แก้ไขหมวดหมู่ไม่สำเร็จ')
+            alert('แก้ไขหมวดหมู่ไม่สำเร็จ')
         } finally {
             setLoading(false)
         }

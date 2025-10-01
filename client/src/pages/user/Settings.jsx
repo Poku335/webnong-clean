@@ -1,7 +1,7 @@
 // rafce
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify"; // Replaced with window.alert
 import useEcomStore from "../../store/ecom-store";
 import axios from "axios";
 
@@ -36,7 +36,7 @@ const Settings = () => {
 
   const fetchAddresses = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/user/addresses", {
+      const response = await axios.get("http://localhost:5002/api/user/addresses", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAddresses(response.data.addresses);
@@ -49,17 +49,17 @@ const Settings = () => {
     setLoading(true);
     try {
       const response = await axios.put(
-        "http://localhost:5001/api/user/profile",
+        "http://localhost:5002/api/user/profile",
         data,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      toast.success(response.data.message);
+      // alert(response.data.message); // ไม่แสดง alert สำหรับการกระทำปกติ
       // อัปเดต user ใน store
       useEcomStore.getState().setUser(response.data.user);
     } catch (error) {
-      toast.error(error.response?.data?.message || "เกิดข้อผิดพลาด");
+      alert(error.response?.data?.message || "เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
@@ -71,30 +71,30 @@ const Settings = () => {
       if (editingAddress) {
         // อัปเดตที่อยู่
         await axios.put(
-          `http://localhost:5001/api/user/addresses/${editingAddress.id}`,
+          `http://localhost:5002/api/user/addresses/${editingAddress.id}`,
           data,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        toast.success("อัปเดตที่อยู่สำเร็จ");
+        // alert("อัปเดตที่อยู่สำเร็จ"); // ไม่แสดง alert สำหรับการกระทำปกติ
       } else {
         // เพิ่มที่อยู่ใหม่
         await axios.post(
-          "http://localhost:5001/api/user/addresses",
+          "http://localhost:5002/api/user/addresses",
           data,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        toast.success("เพิ่มที่อยู่สำเร็จ");
+        // alert("เพิ่มที่อยู่สำเร็จ"); // ไม่แสดง alert สำหรับการกระทำปกติ
       }
       fetchAddresses();
       setShowAddressForm(false);
       setEditingAddress(null);
       resetAddress();
     } catch (error) {
-      toast.error(error.response?.data?.message || "เกิดข้อผิดพลาด");
+      alert(error.response?.data?.message || "เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
@@ -117,13 +117,13 @@ const Settings = () => {
 
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:5001/api/user/addresses/${id}`, {
+      await axios.delete(`http://localhost:5002/api/user/addresses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      toast.success("ลบที่อยู่สำเร็จ");
+      // alert("ลบที่อยู่สำเร็จ"); // ไม่แสดง alert สำหรับการกระทำปกติ
       fetchAddresses();
     } catch (error) {
-      toast.error(error.response?.data?.message || "เกิดข้อผิดพลาด");
+      alert(error.response?.data?.message || "เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
@@ -138,9 +138,14 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">ตั้งค่าบัญชี</h1>
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50">
+          <div className="px-6 py-8">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                <span className="text-2xl">⚙️</span>
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900">ตั้งค่าบัญชี</h1>
+            </div>
 
             {/* Profile Information */}
             <div className="mb-8">
@@ -189,7 +194,7 @@ const Settings = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
                 </button>
@@ -203,7 +208,7 @@ const Settings = () => {
                 <button
                   onClick={() => setShowAddressForm(true)}
                   disabled={addresses.length >= 5}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-success disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   เพิ่มที่อยู่ใหม่
                 </button>
@@ -245,10 +250,17 @@ const Settings = () => {
                           เบอร์โทรศัพท์ *
                         </label>
                         <input
-                          {...registerAddress("phone", { required: "กรุณากรอกเบอร์โทรศัพท์" })}
+                          {...registerAddress("phone", { 
+                            required: "กรุณากรอกเบอร์โทรศัพท์",
+                            pattern: {
+                              value: /^[0-9]{10}$/,
+                              message: "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 ตัว"
+                            }
+                          })}
                           type="tel"
+                          maxLength="10"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="กรอกเบอร์โทรศัพท์"
+                          placeholder="กรอกเบอร์โทรศัพท์ 10 ตัว"
                         />
                         {errorsAddress.phone && (
                           <p className="text-red-500 text-sm mt-1">{errorsAddress.phone.message}</p>
@@ -276,10 +288,17 @@ const Settings = () => {
                         รหัสไปรษณีย์ *
                       </label>
                       <input
-                        {...registerAddress("postalCode", { required: "กรุณากรอกรหัสไปรษณีย์" })}
+                        {...registerAddress("postalCode", { 
+                          required: "กรุณากรอกรหัสไปรษณีย์",
+                          pattern: {
+                            value: /^[0-9]{5}$/,
+                            message: "รหัสไปรษณีย์ต้องเป็นตัวเลข 5 ตัว"
+                          }
+                        })}
                         type="text"
+                        maxLength="5"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="กรอกรหัสไปรษณีย์"
+                        placeholder="กรอกรหัสไปรษณีย์ 5 ตัว"
                       />
                       {errorsAddress.postalCode && (
                         <p className="text-red-500 text-sm mt-1">{errorsAddress.postalCode.message}</p>
@@ -301,14 +320,14 @@ const Settings = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                        className="btn-primary disabled:opacity-50"
                       >
                         {loading ? "กำลังบันทึก..." : "บันทึก"}
                       </button>
                       <button
                         type="button"
                         onClick={handleCancelAddress}
-                        className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                        className="btn-secondary"
                       >
                         ยกเลิก
                       </button>
@@ -341,13 +360,13 @@ const Settings = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEditAddress(address)}
-                          className="text-blue-600 hover:text-blue-800 text-sm"
+                          className="btn-sm bg-yellow-500 hover:bg-yellow-600 text-white shadow-md hover:shadow-lg transition-colors duration-200"
                         >
                           แก้ไข
                         </button>
                         <button
                           onClick={() => handleDeleteAddress(address.id)}
-                          className="text-red-600 hover:text-red-800 text-sm"
+                          className="btn-sm bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg transition-colors duration-200"
                         >
                           ลบ
                         </button>

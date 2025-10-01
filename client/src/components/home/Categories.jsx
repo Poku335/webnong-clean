@@ -47,7 +47,7 @@ const Categories = () => {
           onClick={() => onClickCategory(cat.id)}
           className="card p-4 text-center group hover:shadow-large transition-all duration-300 hover:-translate-y-1"
         >
-          <div className="w-full h-20 bg-gradient-to-br from-primary-100 to-accent-100 rounded-lg mb-3 flex items-center justify-center text-primary-600 group-hover:from-primary-200 group-hover:to-accent-200 transition-all duration-300 overflow-hidden">
+          <div className="w-full h-20 bg-primary-100 rounded-lg mb-3 flex items-center justify-center text-primary-600 group-hover:bg-primary-200 transition-all duration-300 overflow-hidden">
             {cat.image ? (
               <img 
                 src={cat.image} 
@@ -55,7 +55,7 @@ const Categories = () => {
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary-100 to-accent-100 rounded-lg flex items-center justify-center">
+              <div className="w-full h-full bg-primary-100 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">📦</span>
               </div>
             )}

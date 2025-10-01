@@ -1,7 +1,7 @@
 // rafce
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify"; // Replaced with window.alert
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import zxcvbn from "zxcvbn";
@@ -12,7 +12,9 @@ const registerSchema = z
   .object({
     fullName: z.string().min(1, { message: "กรุณากรอกชื่อ-นามสกุล" }),
     email: z.string().email({ message: "Invalid email!!!" }),
-    phone: z.string().optional(),
+    phone: z.string().optional().refine((val) => !val || /^[0-9]{10}$/.test(val), {
+      message: "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 ตัว"
+    }),
     password: z.string().min(8, { message: "Password ต้องมากกว่า 8 ตัวอักษร" }),
     confirmPassword: z.string(),
   })
@@ -53,15 +55,15 @@ const Register = () => {
     // console.log("ok ลูกพี่");
     // Send to Back
     try {
-      const res = await axios.post("http://localhost:5001/api/register", data);
+      const res = await axios.post("http://localhost:5002/api/register", data);
 
       console.log(res.data);
-      toast.success(res.data);
+      // alert(res.data); // ไม่แสดง alert สำหรับการกระทำปกติ
       // Navigate to login page after successful registration
       navigate("/login");
     } catch (err) {
       const errMsg = err.response?.data?.message;
-      toast.error(errMsg);
+      alert(errMsg);
       console.log(err);
     }
   };
@@ -70,17 +72,20 @@ const Register = () => {
   // console.log(tam)
   console.log(passwordScore);
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-accent-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-orange-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
-        <div className="card p-8">
+        <div className="card p-8 relative overflow-hidden">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-display font-bold text-secondary-900 mb-2">สมัครสมาชิก</h1>
-            <p className="text-secondary-600">สร้างบัญชีใหม่เพื่อเริ่มต้น</p>
+            <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">👤</span>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">สมัครสมาชิก</h1>
+            <p className="text-gray-600 text-lg">สร้างบัญชีใหม่เพื่อเริ่มต้น</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-3">
                 ชื่อ-นามสกุล *
               </label>
               <input
@@ -95,7 +100,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
                 อีเมล *
               </label>
               <input
@@ -110,13 +115,14 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-3">
                 เบอร์โทรศัพท์
               </label>
               <input
                 {...register("phone")}
                 id="phone"
-                placeholder="กรอกเบอร์โทรศัพท์ของคุณ"
+                placeholder="กรอกเบอร์โทรศัพท์ 10 ตัว"
+                maxLength="10"
                 className={`input-field ${errors.phone && "border-red-500 focus:ring-red-500"}`}
               />
               {errors.phone && (
@@ -125,7 +131,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
                 รหัสผ่าน
               </label>
               <input
@@ -145,7 +151,7 @@ const Register = () => {
               {watch().password?.length > 0 && (
                 <div className="mt-3">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-secondary-600">ความแข็งแกร่งของรหัสผ่าน:</span>
+                    <span className="text-sm text-gray-600">ความแข็งแกร่งของรหัสผ่าน:</span>
                     <span className={`text-sm font-medium ${
                       passwordScore <= 2 ? "text-red-500" : 
                       passwordScore < 4 ? "text-yellow-500" : 
@@ -165,7 +171,7 @@ const Register = () => {
                               : passwordScore < 4
                               ? "bg-yellow-500"
                               : "bg-green-500"
-                            : "bg-secondary-200"
+                            : "bg-gray-200"
                         }`}
                       />
                     ))}
@@ -175,7 +181,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-3">
                 ยืนยันรหัสผ่าน
               </label>
               <input 
@@ -199,14 +205,18 @@ const Register = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-secondary-600">
+          <div className="mt-8 text-center">
+            <p className="text-gray-600">
               มีบัญชีอยู่แล้ว?{' '}
-              <a href="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
+              <a href="/login" className="text-orange-600 hover:text-orange-700 font-semibold transition-colors">
                 เข้าสู่ระบบ
               </a>
             </p>
           </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute -top-10 -right-10 w-20 h-20 bg-orange-300 rounded-full opacity-20"></div>
+          <div className="absolute -bottom-10 -left-10 w-16 h-16 bg-orange-300 rounded-full opacity-20"></div>
         </div>
       </div>
     </div>

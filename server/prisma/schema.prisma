@@ -57,6 +57,10 @@ model Order {
   amount  Float?
   status   String?
   currentcy String?
+  paymentMethod String @default("ปลายทาง") // "ปลายทาง" หรือ "QR Code"
+  paymentStatus String @default("pending") // "pending" หรือ "complete"
+  qrCodeImage String? // URL ของ QR Code
+  paymentSlip String? // URL ของสลิปโอนเงิน
   orderedById Int
   orderedBy  User     @relation(fields: [orderedById], references: [id])
   productsOnOrders ProductOnOrder[]
@@ -116,9 +120,9 @@ model Image {
 model UserAddress {
   id          Int      @id @default(autoincrement())
   fullName    String
-  phone       String
+  phone       String   @db.VarChar(10) // จำกัด 10 ตัว
   address     String
-  postalCode  String
+  postalCode  String   @db.VarChar(5) // จำกัด 5 ตัว
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

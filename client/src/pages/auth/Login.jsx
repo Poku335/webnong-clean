@@ -1,6 +1,9 @@
 // rafce
 import { useState } from "react";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify"; // Replaced with window.alert
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import useEcomStore from "../../store/ecom-store";
 import { useNavigate } from "react-router-dom";
 import { currentUser } from "../../api/auth";
@@ -9,12 +12,13 @@ const Login = () => {
   // Javascript
   const navigate = useNavigate();
   const actionLogin = useEcomStore((state) => state.actionLogin);
-  const user = useEcomStore((state) => state.user);
-  console.log("user form zustand", user);
+  // const user = useEcomStore((state) => state.user); // Not used
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     setForm({
@@ -24,6 +28,7 @@ const Login = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await actionLogin(form);
       const role = res.data.payload.role;
@@ -33,11 +38,13 @@ const Login = () => {
       useEcomStore.getState().setUser(userRes.data.user);
       
       roleRedirect(role);
-      toast.success("ยินดีต้อนรับ");
+      // alert("ยินดีต้อนรับ! 🎉"); // ไม่แสดง alert สำหรับการกระทำปกติ
     } catch (err) {
       console.log(err);
-      const errMsg = err.response?.data?.message;
-      toast.error(errMsg);
+      const errMsg = err.response?.data?.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ";
+      alert(errMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,62 +57,108 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-accent-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-orange-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
-        <div className="card p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="card p-8 relative overflow-hidden"
+        >
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors duration-300"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">กลับ</span>
+          </button>
+
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-display font-bold text-secondary-900 mb-2">เข้าสู่ระบบ</h1>
-            <p className="text-secondary-600">ยินดีต้อนรับกลับมา</p>
+            <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">🔐</span>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">เข้าสู่ระบบ</h1>
+            <p className="text-gray-600 text-lg">ยินดีต้อนรับกลับมา</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
                 อีเมล
               </label>
-              <input
-                id="email"
-                placeholder="กรอกอีเมลของคุณ"
-                className="input-field"
-                onChange={handleOnChange}
-                name="email"
-                type="email"
-                required
-              />
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  id="email"
+                  placeholder="กรอกอีเมลของคุณ"
+                  className="input-field"
+                  onChange={handleOnChange}
+                  name="email"
+                  type="email"
+                  required
+                  style={{ paddingLeft: '3rem' }}
+                />
+              </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-secondary-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
                 รหัสผ่าน
               </label>
-              <input
-                id="password"
-                placeholder="กรอกรหัสผ่านของคุณ"
-                className="input-field"
-                onChange={handleOnChange}
-                name="password"
-                type="password"
-                required
-              />
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  id="password"
+                  placeholder="กรอกรหัสผ่านของคุณ"
+                  className="input-field"
+                  onChange={handleOnChange}
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  style={{ paddingLeft: '3rem', paddingRight: '3rem' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
-              className="btn-primary w-full"
+              disabled={loading}
+              className="btn-primary w-full flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              เข้าสู่ระบบ
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>กำลังเข้าสู่ระบบ...</span>
+                </>
+              ) : (
+                <>
+                  <span>เข้าสู่ระบบ</span>
+                </>
+              )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-secondary-600">
+          <div className="mt-8 text-center">
+            <p className="text-gray-600">
               ยังไม่มีบัญชี?{' '}
-              <a href="/register" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
+              <Link to="/register" className="text-orange-600 hover:text-orange-700 font-semibold transition-colors">
                 สมัครสมาชิก
-              </a>
+              </Link>
             </p>
           </div>
-        </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute -top-10 -right-10 w-20 h-20 bg-orange-300 rounded-full opacity-20"></div>
+          <div className="absolute -bottom-10 -left-10 w-16 h-16 bg-orange-300 rounded-full opacity-20"></div>
+        </motion.div>
       </div>
     </div>
   );

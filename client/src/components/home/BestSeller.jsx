@@ -3,6 +3,7 @@ import { listProductBy } from "../../api/product";
 import ProductCard from "../card/ProductCard";
 import SwiperShowProduct from "../../utils/SwiperShowProduct";
 import { SwiperSlide } from "swiper/react";
+import productsMock from "../../mock/products.json";
 
 const BestSeller = () => {
   const [data, setData] = useState([]);
@@ -15,10 +16,13 @@ const BestSeller = () => {
   const loadData = () => {
     listProductBy("sold", "desc", 12)
       .then((res) => {
-        setData(res.data);
+        console.log("BestSeller API response:", res.data);
+        setData(res.data || []);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("BestSeller API error:", err);
+        // Fallback to mock data
+        setData(productsMock.slice(0, 12));
       });
   };
 

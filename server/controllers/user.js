@@ -207,16 +207,53 @@ exports.saveAddress = async (req, res) => {
 
 exports.saveOrder = async (req, res) => {
   try {
-    const { amount, status, currency } = req.body.paymentIntent;
-    const amountTHB = Number(amount) / 100;
+    // Check if it's QR Code payment
+    if (req.body.paymentMethod === "QR Code") {
+      const { paymentMethod, qrCodeImage, paymentSlip, paymentStatus } = req.body;
+      
+      const cart = await prisma.cart.findFirst({
+        where: { orderedById: req.user.id },
+        include: { productsOnCarts: true },
+      });
 
-    const order = await createOrderFromCart(req.user.id, {
-      amount: amountTHB,
-      status,
-      currency,
-    });
+      if (!cart || cart.productsOnCarts.length === 0) {
+        return res.status(400).json({ ok: false, message: "Cart is empty" });
+      }
 
-    res.json({ ok: true, order });
+      const order = await prisma.order.create({
+        data: {
+          productsOnOrders: {
+            create: cart.productsOnCarts.map((item) => ({
+              productId: item.productId,
+              count: item.count,
+              price: item.price,
+            })),
+          },
+          orderedBy: { connect: { id: req.user.id } },
+          cartTotal: cart.cartTotal,
+          amount: cart.cartTotal,
+          status: "Pending",
+          currentcy: "THB",
+          orderStatus: "รอดำเนินการ",
+          paymentMethod: paymentMethod,
+          paymentStatus: paymentStatus,
+          qrCodeImage: qrCodeImage,
+          paymentSlip: paymentSlip,
+        },
+      });
+
+      // Clear cart
+      await prisma.productOnCart.deleteMany({ where: { cartId: cart.id } });
+      await prisma.cart.delete({ where: { id: cart.id } });
+
+      res.json({ ok: true, order });
+    } else {
+      // Cash on delivery payment - redirect to finalizeOrder endpoint
+      return res.status(400).json({ 
+        ok: false, 
+        message: "Please use /api/user/finalize-order endpoint for cash on delivery payments" 
+      });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, message: "Server Error" });
@@ -234,7 +271,7 @@ exports.finalizeOrderAndClearCart = async (req, res) => {
     });
 
     if (!cart || cart.productsOnCarts.length === 0) {
-      return res.status(400).json({ ok: false, message: "Cart is empty" });
+      return res.status(400).json({ ok: false, message: "ตะกร้าสินค้าว่างเปล่า กรุณาเพิ่มสินค้าก่อนสั่งซื้อ" });
     }
 
     // ✅ ตรวจสอบสต็อกล่าสุดก่อนตัดสต็อก/สร้างออเดอร์ (กันเคสสต็อกไม่พอ)
@@ -246,7 +283,7 @@ exports.finalizeOrderAndClearCart = async (req, res) => {
       if (!product || item.count > product.quantity) {
         return res.status(400).json({
           ok: false,
-          message: `ขออภัย สินค้า ${product?.title || "product"} หมดหรือสต็อกไม่พอ`,
+          message: `ขออภัย สินค้า "${product?.title || "ไม่ระบุ"}" หมดสต็อกหรือจำนวนไม่เพียงพอ (เหลือ: ${product?.quantity || 0} ชิ้น)`,
         });
       }
     }
@@ -267,7 +304,7 @@ exports.finalizeOrderAndClearCart = async (req, res) => {
           amount: cart.cartTotal,
           status: "Completed",
           currentcy: "THB",
-          orderStatus: "Completed",
+          orderStatus: "ชำระเงินแล้ว",
         },
       });
 
@@ -300,13 +337,13 @@ exports.finalizeOrderAndClearCart = async (req, res) => {
     // ✅ ตอบกลับพร้อมสถานะตะกร้าว่าง เพื่อให้ฝั่ง client เคลียร์ state ได้แน่นอน
     res.json({
       ok: true,
-      message: "Order finalized and cart cleared",
+      // message: "สั่งซื้อสำเร็จ! สินค้าจะจัดส่งให้คุณเร็วๆ นี้", // ไม่แสดง success message
       order,
       cart: { products: [], cartTotal: 0 },
     });
   } catch (err) {
     console.error("Error finalizing order:", err);
-    res.status(500).json({ ok: false, message: "Server Error" });
+    res.status(500).json({ ok: false, message: "เกิดข้อผิดพลาดในระบบ กรุณาลองใหม่อีกครั้ง" });
   }
 };
 
@@ -356,6 +393,21 @@ exports.saveUserAddress = async (req, res) => {
     const { fullName, phone, address, postalCode, isDefault } = req.body;
     const userId = Number(req.user.id);
 
+    // Validation
+    if (!phone || !/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 ตัว" 
+      });
+    }
+
+    if (!postalCode || !/^[0-9]{5}$/.test(postalCode)) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: "รหัสไปรษณีย์ต้องเป็นตัวเลข 5 ตัว" 
+      });
+    }
+
     // ตรวจสอบจำนวนที่อยู่ที่มีอยู่
     const existingAddresses = await prisma.userAddress.count({
       where: { userId }
@@ -399,6 +451,21 @@ exports.updateUserAddress = async (req, res) => {
     const { id } = req.params;
     const { fullName, phone, address, postalCode, isDefault } = req.body;
     const userId = Number(req.user.id);
+
+    // Validation
+    if (!phone || !/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 ตัว" 
+      });
+    }
+
+    if (!postalCode || !/^[0-9]{5}$/.test(postalCode)) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: "รหัสไปรษณีย์ต้องเป็นตัวเลข 5 ตัว" 
+      });
+    }
 
     // ตรวจสอบว่าที่อยู่นี้เป็นของ user นี้หรือไม่
     const existingAddress = await prisma.userAddress.findFirst({

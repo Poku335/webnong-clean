@@ -1,21 +1,37 @@
 import { useEffect, useMemo, useState } from 'react'
+import { 
+  Package, 
+  CheckCircle, 
+  Clock, 
+  TrendingUp,
+  BarChart3
+} from 'lucide-react'
 import { getOrdersAdmin } from '../../api/admin'
 import useEcomStore from '../../store/ecom-store'
 import { numberFormat } from '../../utils/number'
 
 const Dashboard = () => {
   const token = useEcomStore(s=>s.token)
+  const user = useEcomStore(s=>s.user)
   const [orders, setOrders] = useState([])
 
   useEffect(()=>{
-    if(!token) return
-    getOrdersAdmin(token).then(res=> setOrders(res.data)).catch(console.error)
+    if(!token) {
+      console.log('No token found, user needs to login')
+      return
+    }
+    getOrdersAdmin(token).then(res=> setOrders(res.data)).catch(err => {
+      console.error('Error fetching orders:', err)
+      if(err.response?.status === 401) {
+        console.log('Token expired or invalid, user needs to login again')
+      }
+    })
   },[token])
 
   const totalRevenue = useMemo(()=> orders.reduce((s,o)=> s + (o.amount || 0), 0), [orders])
   const totalOrders = orders.length
-  const completed = orders.filter(o=> o.orderStatus === 'Completed').length
-  const processing = orders.filter(o=> o.orderStatus === 'Processing').length
+  const completed = orders.filter(o=> o.orderStatus === 'ชำระเงินแล้ว').length
+  const processing = orders.filter(o=> o.orderStatus === 'รอดำเนินการ').length
 
   const last7Days = useMemo(()=>{
     const days = [...Array(7)].map((_,i)=>{
@@ -38,195 +54,271 @@ const Dashboard = () => {
   },[orders])
 
 
+  // ถ้าไม่มี token หรือ user แสดงข้อความให้ login
+  if (!token || !user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-8 h-8 text-orange-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">กรุณาเข้าสู่ระบบ</h2>
+          <p className="text-gray-600 mb-6">คุณต้องเข้าสู่ระบบเพื่อดูข้อมูล Dashboard</p>
+          <a 
+            href="/login" 
+            className="inline-flex items-center justify-center px-6 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors duration-200"
+          >
+            เข้าสู่ระบบ
+          </a>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-secondary-900 mb-2">แผงควบคุม</h1>
-        <p className="text-secondary-600">ภาพรวมการขายและสถิติของร้านค้า</p>
-      </div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+                <BarChart3 className="w-8 h-8 text-orange-500" />
+                แผงควบคุม
+              </h1>
+              <p className="text-gray-600">ภาพรวมการขายและสถิติของร้านค้า</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="bg-orange-100 px-4 py-2 rounded-xl">
+                <span className="text-orange-700 font-semibold text-sm">รายได้รวม: {numberFormat(totalRevenue)} บาท</span>
+              </div>
+              <div className="bg-blue-100 px-4 py-2 rounded-xl">
+                <span className="text-blue-700 font-semibold text-sm">คำสั่งซื้อ: {totalOrders}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-secondary-600 text-sm font-medium">รายได้รวม</div>
-              <div className="text-2xl font-bold text-secondary-900 mt-1">{numberFormat(totalRevenue)}</div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6 hover:shadow-xl transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-gray-600 text-sm font-medium flex items-center gap-1">
+                  รายได้รวม
+                </div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">{numberFormat(totalRevenue)} บาท</div>
+              </div>
+              <div className="w-12 h-12 bg-orange-200 rounded-xl flex items-center justify-center">
+                <span className="text-orange-600 font-bold text-lg">฿</span>
+              </div>
             </div>
-            <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-              <span className="text-primary-600 text-xl">💰</span>
+          </div>
+          
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6 hover:shadow-xl transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-gray-600 text-sm font-medium flex items-center gap-1">
+                  <Package className="w-4 h-4" />
+                  คำสั่งซื้อทั้งหมด
+                </div>
+                <div className="text-2xl font-bold text-gray-900 mt-1">{totalOrders}</div>
+              </div>
+              <div className="w-12 h-12 bg-blue-200 rounded-xl flex items-center justify-center">
+                <Package className="w-6 h-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6 hover:shadow-xl transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-gray-600 text-sm font-medium flex items-center gap-1">
+                  <CheckCircle className="w-4 h-4" />
+                  เสร็จสมบูรณ์
+                </div>
+                <div className="text-2xl font-bold text-green-600 mt-1">{completed}</div>
+              </div>
+              <div className="w-12 h-12 bg-green-200 rounded-xl flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6 hover:shadow-xl transition-shadow duration-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-gray-600 text-sm font-medium flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  กำลังดำเนินการ
+                </div>
+                <div className="text-2xl font-bold text-yellow-600 mt-1">{processing}</div>
+              </div>
+              <div className="w-12 h-12 bg-yellow-200 rounded-xl flex items-center justify-center">
+                <Clock className="w-6 h-6 text-yellow-600" />
+              </div>
             </div>
           </div>
         </div>
-        
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-secondary-600 text-sm font-medium">คำสั่งซื้อทั้งหมด</div>
-              <div className="text-2xl font-bold text-secondary-900 mt-1">{totalOrders}</div>
-            </div>
-            <div className="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center">
-              <span className="text-accent-600 text-xl">📦</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-secondary-600 text-sm font-medium">เสร็จสมบูรณ์</div>
-              <div className="text-2xl font-bold text-green-600 mt-1">{completed}</div>
-            </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <span className="text-green-600 text-xl">✅</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="card p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-secondary-600 text-sm font-medium">กำลังดำเนินการ</div>
-              <div className="text-2xl font-bold text-yellow-600 mt-1">{processing}</div>
-            </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <span className="text-yellow-600 text-xl">⏳</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* กราฟแท่งยอดขาย 7 วันล่าสุด */}
-        <div className="card p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-display font-semibold text-secondary-900">ยอดขาย 7 วันล่าสุด</h3>
-            <div className="text-sm text-secondary-600">รายวัน</div>
-          </div>
-          <div className="flex items-end gap-2 h-48">
-            {last7Days.map((d, index)=>{
-              const max = Math.max(1, ...last7Days.map(x=>x.value))
-              const h = Math.round((d.value / max) * 100)
-              const isToday = index === last7Days.length - 1
-              return (
-                <div key={d.label} className="flex flex-col items-center gap-2 flex-1 group">
-                  <div className="relative">
-                    <div 
-                      className={`w-full rounded-t-lg transition-all duration-300 hover:scale-105 cursor-pointer shadow-lg ${
-                        isToday 
-                          ? 'bg-gradient-to-t from-green-500 to-green-400 hover:from-green-600 hover:to-green-500' 
-                          : 'bg-gradient-to-t from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500'
-                      }`}
-                      style={{ height: `${Math.max(h, 8)}%` }} 
-                      title={`${d.label}: ${numberFormat(d.value)} บาท`} 
-                    />
-                    {d.value > 0 && (
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                        {numberFormat(d.value)} บาท
+        {/* Sales Overview Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* ยอดขาย 7 วันล่าสุด - Card Layout */}
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-orange-500" />
+                ยอดขาย 7 วันล่าสุด
+              </h3>
+              <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-lg">รายวัน</div>
+            </div>
+            
+            <div className="space-y-3">
+              {last7Days.map((day, index) => {
+                const isToday = index === last7Days.length - 1;
+                const isYesterday = index === last7Days.length - 2;
+                const maxValue = Math.max(...last7Days.map(d => d.value));
+                const percentage = maxValue > 0 ? (day.value / maxValue) * 100 : 0;
+                
+                return (
+                  <div
+                    key={day.label}
+                    className={`p-4 rounded-xl border-2 transition-shadow duration-200 hover:shadow-md ${
+                      isToday 
+                        ? 'bg-green-100 border-green-200' 
+                        : isYesterday
+                        ? 'bg-blue-100 border-blue-200'
+                        : 'bg-gray-100 border-gray-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          isToday 
+                            ? 'bg-green-500 text-white' 
+                            : isYesterday
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-400 text-white'
+                        }`}>
+                          <span className="text-sm font-bold">{day.label}</span>
+                        </div>
+                        <div>
+                          <p className={`font-semibold ${isToday ? 'text-green-800' : isYesterday ? 'text-blue-800' : 'text-gray-800'}`}>
+                            {day.value > 0 ? numberFormat(day.value) : 'ไม่มียอดขาย'}
+                          </p>
+                          <p className="text-xs text-gray-500">บาท</p>
+                        </div>
                       </div>
-                    )}
+                      <div className="text-right">
+                        <div className={`text-sm font-medium ${isToday ? 'text-green-600' : isYesterday ? 'text-blue-600' : 'text-gray-600'}`}>
+                          {percentage.toFixed(1)}%
+                        </div>
+                        <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full transition-all duration-500 ${
+                              isToday 
+                                ? 'bg-green-500' 
+                                : isYesterday
+                                ? 'bg-blue-500'
+                                : 'bg-gray-400'
+                            }`}
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={`text-xs font-medium ${isToday ? 'text-green-600 font-bold' : 'text-secondary-500'}`}>
-                    {d.label}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div className="mt-4 text-center">
-            <div className="text-sm text-secondary-600">
-              ยอดขายรวม 7 วัน: <span className="font-semibold text-primary-600">{numberFormat(last7Days.reduce((sum, day) => sum + day.value, 0))} บาท</span>
+                );
+              })}
+            </div>
+            
+            <div className="mt-6 p-4 bg-orange-100 rounded-xl border border-orange-200">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">ยอดขายรวม 7 วัน</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {numberFormat(last7Days.reduce((sum, day) => sum + day.value, 0))} บาท
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* กราฟวงกลมแสดงสถานะคำสั่งซื้อ */}
-        <div className="card p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-display font-semibold text-secondary-900">สถานะคำสั่งซื้อ</h3>
-            <div className="text-sm text-secondary-600">ทั้งหมด {totalOrders} คำสั่ง</div>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="relative w-48 h-48">
-              <svg className="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
-                {/* Background circle */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  strokeWidth="8"
-                />
-                {/* Completed orders */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="8"
-                  strokeDasharray={`${(completed / totalOrders) * 251.2} 251.2`}
-                  strokeLinecap="round"
-                />
-                {/* Processing orders */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#f59e0b"
-                  strokeWidth="8"
-                  strokeDasharray={`${(processing / totalOrders) * 251.2} 251.2`}
-                  strokeDashoffset={`-${(completed / totalOrders) * 251.2}`}
-                  strokeLinecap="round"
-                />
-                {/* Pending orders */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#ef4444"
-                  strokeWidth="8"
-                  strokeDasharray={`${((totalOrders - completed - processing) / totalOrders) * 251.2} 251.2`}
-                  strokeDashoffset={`-${((completed + processing) / totalOrders) * 251.2}`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-secondary-900">{totalOrders}</div>
-                  <div className="text-sm text-secondary-600">คำสั่งซื้อ</div>
+          {/* สถานะคำสั่งซื้อ - Card Layout */}
+          <div className="bg-white rounded-2xl shadow-lg border border-orange-200/50 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-orange-500" />
+                สถานะคำสั่งซื้อ
+              </h3>
+              <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-lg">ทั้งหมด {totalOrders} คำสั่ง</div>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Completed Orders */}
+              <div className="p-4 bg-green-100 rounded-xl border border-green-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-green-800">เสร็จสมบูรณ์</p>
+                      <p className="text-sm text-green-600">คำสั่งซื้อที่เสร็จสิ้นแล้ว</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-green-600">{completed}</p>
+                    <p className="text-xs text-green-500">
+                      {totalOrders > 0 ? ((completed / totalOrders) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="mt-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-secondary-600">เสร็จสมบูรณ์</span>
+
+              {/* Processing Orders */}
+              <div className="p-4 bg-yellow-100 rounded-xl border border-yellow-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-yellow-800">กำลังดำเนินการ</p>
+                      <p className="text-sm text-yellow-600">คำสั่งซื้อที่กำลังดำเนินการ</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-yellow-600">{processing}</p>
+                    <p className="text-xs text-yellow-500">
+                      {totalOrders > 0 ? ((processing / totalOrders) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm font-semibold text-secondary-900">{completed}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <span className="text-sm text-secondary-600">กำลังดำเนินการ</span>
+
+              {/* Pending Orders */}
+              <div className="p-4 bg-red-100 rounded-xl border border-red-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                      <Package className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-red-800">รอดำเนินการ</p>
+                      <p className="text-sm text-red-600">คำสั่งซื้อที่รอการดำเนินการ</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-red-600">{totalOrders - completed - processing}</p>
+                    <p className="text-xs text-red-500">
+                      {totalOrders > 0 ? (((totalOrders - completed - processing) / totalOrders) * 100).toFixed(1) : 0}%
+                    </p>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm font-semibold text-secondary-900">{processing}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm text-secondary-600">รอดำเนินการ</span>
-              </div>
-              <span className="text-sm font-semibold text-secondary-900">{totalOrders - completed - processing}</span>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   )
 }

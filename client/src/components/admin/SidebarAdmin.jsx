@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -7,22 +6,23 @@ import {
   ShoppingBasket,
   ListOrdered,
   LogOut,
-  Home
+  Home,
+  QrCode
 } from "lucide-react";
 
 const SidebarAdmin = () => {
   const baseStyle =
-    "px-4 py-3 flex items-center gap-2 rounded-md transition-colors duration-200";
+    "px-4 py-3 flex items-center gap-3 rounded-lg transition-all duration-300 font-medium";
 
   return (
-    <div className="bg-gray-800 w-64 text-gray-100 flex flex-col h-screen shadow-lg">
+    <div className="bg-gray-800 w-64 text-gray-100 flex flex-col h-screen shadow-2xl border-r border-orange-200/20">
       {/* Header */}
-      <div className="h-24 flex flex-col items-center justify-center border-b border-gray-700">
-        <div className="text-2xl font-bold mb-2">Admin Panel</div>
+      <div className="h-24 flex flex-col items-center justify-center border-b border-orange-200/20 bg-orange-500/10">
+        <div className="text-2xl font-bold mb-2 text-white">Admin Panel</div>
         {/* ปุ่มกลับหน้าเว็บ */}
         <Link
           to="/"
-          className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm transition-colors"
+          className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg"
         >
           <Home className="w-4 h-4" />
           กลับสู่หน้าเว็บ
@@ -30,14 +30,14 @@ const SidebarAdmin = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-6 space-y-2">
         <NavLink
           to={"/admin"}
           end
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-blue-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-blue-500 hover:text-white`
+              ? `${baseStyle} bg-orange-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-orange-500/20 hover:text-orange-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <LayoutDashboard className="w-5 h-5" />
@@ -48,8 +48,8 @@ const SidebarAdmin = () => {
           to={"manage"}
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-blue-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-blue-500 hover:text-white`
+              ? `${baseStyle} bg-orange-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-orange-500/20 hover:text-orange-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <UserCog className="w-5 h-5" />
@@ -60,8 +60,8 @@ const SidebarAdmin = () => {
           to={"category"}
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-blue-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-blue-500 hover:text-white`
+              ? `${baseStyle} bg-orange-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-orange-500/20 hover:text-orange-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <SquareChartGantt className="w-5 h-5" />
@@ -72,8 +72,8 @@ const SidebarAdmin = () => {
           to={"product"}
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-blue-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-blue-500 hover:text-white`
+              ? `${baseStyle} bg-orange-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-orange-500/20 hover:text-orange-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <ShoppingBasket className="w-5 h-5" />
@@ -84,8 +84,8 @@ const SidebarAdmin = () => {
           to={"orders"}
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-blue-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-blue-500 hover:text-white`
+              ? `${baseStyle} bg-orange-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-orange-500/20 hover:text-orange-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <ListOrdered className="w-5 h-5" />
@@ -94,13 +94,13 @@ const SidebarAdmin = () => {
       </nav>
 
       {/* Logout */}
-      <div className="px-2 py-4 border-t border-gray-700">
+      <div className="px-3 py-4 border-t border-orange-200/20">
         <NavLink
           to={"/logout"}
           className={({ isActive }) =>
             isActive
-              ? `${baseStyle} bg-red-500 text-white`
-              : `${baseStyle} text-gray-300 hover:bg-red-500 hover:text-white`
+              ? `${baseStyle} bg-red-500 text-white shadow-lg transform scale-105`
+              : `${baseStyle} text-gray-300 hover:bg-red-500/20 hover:text-red-300 hover:transform hover:-translate-y-0.5`
           }
         >
           <LogOut className="w-5 h-5" />

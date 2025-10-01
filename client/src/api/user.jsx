@@ -1,9 +1,9 @@
 import axios from "axios";
-const API = "http://localhost:5001";
+const API = "http://localhost:5002";
 
 export const createUserCart = async (token, cart) => {
   // code body
-  return axios.post("http://localhost:5001/api/user/cart", cart, {
+  return axios.post("http://localhost:5002/api/user/cart", cart, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -12,7 +12,7 @@ export const createUserCart = async (token, cart) => {
 
 export const listUserCart = async (token) => {
   // code body
-  return axios.get("http://localhost:5001/api/user/cart", {
+  return axios.get("http://localhost:5002/api/user/cart", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -22,7 +22,7 @@ export const listUserCart = async (token) => {
 export const saveAddress = async (token, address) => {
   // code body
   return axios.post(
-    "http://localhost:5001/api/user/address",
+    "http://localhost:5002/api/user/address",
     { address },
     {
       headers: {
@@ -34,7 +34,16 @@ export const saveAddress = async (token, address) => {
 
 export const saveOrder = async (token, payload) => {
   // code body
-  return axios.post("http://localhost:5001/api/user/order", payload, {
+  return axios.post("http://localhost:5002/api/user/order", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const finalizeOrder = async (token) => {
+  // code body
+  return axios.post("http://localhost:5002/api/user/finalize-order", {}, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -42,7 +51,7 @@ export const saveOrder = async (token, payload) => {
 };
 
 // export const finalizeOrder = async (token) => {
-//   return await axios.post("http://localhost:5001/api/user/finalize-order",
+//   return await axios.post("http://localhost:5002/api/user/finalize-order",
 //     {},
 //     {
 //       headers: {

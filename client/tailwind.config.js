@@ -54,23 +54,18 @@ export default {
         'large': '0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 2px 10px -2px rgba(0, 0, 0, 0.05)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'bounce-soft': 'bounceSoft 0.6s ease-in-out',
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'cart-bounce': 'cartBounce 0.6s ease-in-out',
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        bounceSoft: {
-          '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
-          '40%': { transform: 'translateY(-8px)' },
-          '60%': { transform: 'translateY(-4px)' },
+        cartBounce: {
+          '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0) scale(1)' },
+          '40%': { transform: 'translateY(-8px) scale(1.1)' },
+          '60%': { transform: 'translateY(-4px) scale(1.05)' },
         }
       }
     },

@@ -1,8 +1,8 @@
 // rafce
 import React from 'react'
 import AppRoutes from './routes/AppRoutes'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer } from 'react-toastify'; // Removed
+// import 'react-toastify/dist/ReactToastify.css'; // Removed
 
 const App = () => {
   // Javascript
@@ -10,7 +10,7 @@ const App = () => {
 
   return (
     <>
-     <ToastContainer />
+     {/* <ToastContainer /> */} {/* Removed */}
      <AppRoutes />
     </>
   )

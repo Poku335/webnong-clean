@@ -81,17 +81,23 @@ const HistoryCard = () => {
                     <tr key={row.id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4 px-4">
                         <Link to={`/product/${row.productId}`}>
-                          {row.product?.images?.[0]?.url ? (
+                          {row.product?.images?.[0]?.secure_url ? (
                             <img
-                              src={row.product.images[0].url}
+                              src={row.product.images[0].secure_url}
                               alt={row.product?.title}
                               className="w-16 h-16 object-cover rounded-lg hover:opacity-90 transition-opacity"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                              }}
                             />
-                          ) : (
-                            <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                              <span className="text-gray-400 text-xs">ไม่มีรูป</span>
-                            </div>
-                          )}
+                          ) : null}
+                          <div 
+                            className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center"
+                            style={{ display: row.product?.images?.[0]?.secure_url ? 'none' : 'flex' }}
+                          >
+                            <span className="text-gray-400 text-xs">ไม่มีรูป</span>
+                          </div>
                         </Link>
                       </td>
                       <td className="py-4 px-4">
@@ -117,9 +123,13 @@ const HistoryCard = () => {
               </table>
             </div>
 
-            {/* Order Total */}
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <div className="flex justify-end">
+            {/* Payment Information */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-gray-600">วิธีการชำระเงิน</p>
+                  <p className="font-medium text-gray-900">{item.paymentMethod || "ปลายทาง"}</p>
+                </div>
                 <div className="text-right">
                   <p className="text-lg font-semibold text-gray-900">ราคารวม</p>
                   <p className="text-2xl font-bold text-orange-600">{numberFormat(item.cartTotal)}</p>

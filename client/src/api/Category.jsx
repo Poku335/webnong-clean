@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const createCategory = async (token, form) => {
     // code body
-    return axios.post('http://localhost:5001/api/category', form, {
+    return axios.post('http://localhost:5002/api/category', form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -12,12 +12,12 @@ export const createCategory = async (token, form) => {
 
 export const listCategory = async () => {
     // code body
-    return axios.get('http://localhost:5001/api/category')
+    return axios.get('http://localhost:5002/api/category')
 }
 
 export const removeCategory = async (token, id) => {
     // code body
-    return axios.delete('http://localhost:5001/api/category/'+id, {
+    return axios.delete('http://localhost:5002/api/category/'+id, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -26,7 +26,7 @@ export const removeCategory = async (token, id) => {
 
 export const updateCategory = async (token, id, form) => {
     // code body
-    return axios.put('http://localhost:5001/api/category/'+id, form, {
+    return axios.put('http://localhost:5002/api/category/'+id, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }

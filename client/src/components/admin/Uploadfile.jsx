@@ -1,6 +1,6 @@
 // rafce
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify' // Replaced with window.alert
 import Resize from 'react-image-file-resizer'
 import { removeFiles, uploadFiles } from '../../api/product'
 import useEcomStore from '../../store/ecom-store'
@@ -24,7 +24,7 @@ const Uploadfile = ({ form, setForm }) => {
                 // Validate
                 const file = files[i]
                 if (!file.type.startsWith('image/')) {
-                    toast.error(`File ${file.name} บ่แม่นรูป`)
+                    alert(`File ${file.name} บ่แม่นรูป`)
                     continue
                 }
                 // Image Resize 
@@ -46,7 +46,7 @@ const Uploadfile = ({ form, setForm }) => {
                                     images: allFiles
                                 })
                                 setIsLoading(false)
-                                toast.success('อัพโหลดรูปภาพสำเร็จ')
+                                // alert('อัพโหลดรูปภาพสำเร็จ') // ไม่แสดง alert สำหรับการกระทำปกติ
                             })
                             .catch((err) => {
                                 console.log(err)
@@ -76,7 +76,7 @@ const Uploadfile = ({ form, setForm }) => {
                     ...form,
                     images: filterImages
                 })
-                toast.error('ลบรูปภาพสำเร็จ')
+                // alert('ลบรูปภาพสำเร็จ') // ไม่แสดง alert สำหรับการกระทำปกติ
             })
             .catch((err) => {
                 console.log(err)

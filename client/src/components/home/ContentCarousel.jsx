@@ -43,7 +43,7 @@ const ContentCarousel = () => {
                   src={item.download_url}
                   alt={`Hero Slide ${item.id}`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute bottom-8 left-8 text-white">
                   <h2 className="text-3xl font-display font-bold mb-2">น้องเอิร์นShop ขายทุกอย่าง</h2>
                   <p className="text-lg opacity-90">สินค้าคุณภาพตกเกรด ราคาเป็นมิจ</p>
