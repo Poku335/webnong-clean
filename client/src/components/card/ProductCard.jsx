@@ -29,7 +29,7 @@ const ProductCard = ({ item }) => {
       whileHover={{ y: -8 }}
       className="group"
     >
-      <div className="card-hover p-3 relative overflow-hidden h-80 flex flex-col">
+      <div className="card-hover p-3 relative overflow-hidden h-64 flex flex-col">
         {/* Like Button */}
         <button
           onClick={handleLike}
