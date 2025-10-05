@@ -1,11 +1,11 @@
 // rafce
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Users, 
-  UserCheck, 
-  UserX, 
-  Shield, 
+import {
+  Users,
+  UserCheck,
+  UserX,
+  Shield,
   ShieldCheck,
   Mail,
   Settings,
@@ -54,14 +54,14 @@ const TableUsers = () => {
   };
 
   const filteredUsers = users.filter((user) => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
-    const matchesStatus = statusFilter === "ALL" || 
+    const matchesStatus = statusFilter === "ALL" ||
       (statusFilter === "ACTIVE" && user.enabled) ||
       (statusFilter === "INACTIVE" && !user.enabled);
-    
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -160,20 +160,21 @@ const TableUsers = () => {
             <table className="w-full table-fixed min-w-[800px]">
               <thead className="bg-orange-50">
                 <tr>
-                  <th className="w-16 px-3 py-4 text-center text-xs font-bold text-gray-900"></th>
-                  <th className="w-64 px-3 py-4 text-left text-xs font-bold text-gray-900">
-                    <Mail className="w-4 h-4 inline mr-1" />
-                    อีเมล
+                  <th className="w-16 px-3 py-4 text-center text-sm font-bold text-gray-900">#</th>
+                  <th className="w-64 px-3 py-4 text-center text-sm font-bold text-gray-900">
+                    <Mail className="w-5 h-5" />
                   </th>
-                  <th className="w-32 px-3 py-4 text-center text-xs font-bold text-gray-900">
-                    <Shield className="w-4 h-4 inline mr-1" />
+                  <th className="w-32 px-3 py-4 text-center text-sm font-bold text-gray-900">
+                    <Shield className="w-4 h-4 inline mr-2" />
                     สิทธิ์
                   </th>
-                  <th className="w-32 px-3 py-4 text-center text-xs font-bold text-gray-900">สถานะ</th>
-                  <th className="w-40 px-3 py-4 text-center text-xs font-bold text-gray-900">
-                    <Settings className="w-4 h-4 inline mr-1" />
-                    จัดการ
+                  <th className="w-40 px-3 py-4 text-center text-sm font-bold text-gray-900">
+                    <div className="flex items-center justify-center gap-2">
+                      <Settings className="w-4 h-4" />
+                      จัดการ
+                    </div>
                   </th>
+                  <th className="w-32 px-3 py-4 text-center text-sm font-bold text-gray-900">สถานะ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -187,17 +188,17 @@ const TableUsers = () => {
                       transition={{ duration: 0.3 }}
                       className="hover:bg-orange-50/50 transition-all duration-300"
                     >
-                      <td className="px-3 py-4 text-xs font-semibold text-gray-900 text-center">
+                      <td className="px-3 py-4 text-sm font-semibold text-gray-900 text-center">
                         {index + 1}
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div className="flex flex-col items-center space-y-2">
+                          <p className="font-semibold text-gray-900 text-sm"></p>
+                          <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center">
                             <Mail className="w-4 h-4 text-white" />
                           </div>
-                          <div className="min-w-0 flex-1">
+                          <div className="text-center">
                             <p className="font-semibold text-gray-900 text-sm truncate">{user.email}</p>
-                            <p className="text-xs text-gray-500 truncate">{user.name || 'ไม่มีชื่อ'}</p>
                           </div>
                         </div>
                       </td>
@@ -205,42 +206,52 @@ const TableUsers = () => {
                         <select
                           onChange={(e) => handleChangeUserRole(user.id, e.target.value)}
                           value={user.role}
-                          className="input-field text-xs py-1 px-2 w-full"
+                          className="input-field text-sm py-2 px-2 w-full"
                         >
                           <option value="user">User</option>
                           <option value="admin">Admin</option>
                         </select>
                       </td>
+                      <td className="px-3 py-4">
+                        <div className="flex justify-center">
+                          <button
+                            className={`btn-sm font-medium transition-all duration-200 flex items-center justify-center gap-1 px-3 py-2 rounded-lg ${user.enabled
+                                ? 'bg-red-500 hover:bg-red-600 text-white'
+                                : 'bg-green-500 hover:bg-green-600 text-white'
+                              }`}
+                            onClick={() => handleChangeUserStatus(user.id, user.enabled)}
+                          >
+                            {user.enabled ? (
+                              <>
+                                <UserX className="w-4 h-4" />
+                                ปิดใช้งาน
+                              </>
+                            ) : (
+                              <>
+                                <UserCheck className="w-4 h-4" />
+                                เปิดใช้งาน
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </td>
                       <td className="px-3 py-4 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                          user.enabled 
-                            ? 'bg-green-100 text-green-800 border border-green-200' 
+                        <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-sm font-semibold ${user.enabled
+                            ? 'bg-green-100 text-green-800 border border-green-200'
                             : 'bg-red-100 text-red-800 border border-red-200'
-                        }`}>
+                          }`}>
                           {user.enabled ? (
                             <>
-                              <UserCheck className="w-3 h-3 mr-1" />
+                              <UserCheck className="w-4 h-4 mr-1" />
                               ใช้งาน
                             </>
                           ) : (
                             <>
-                              <UserX className="w-3 h-3 mr-1" />
+                              <UserX className="w-4 h-4 mr-1" />
                               ปิดใช้งาน
                             </>
                           )}
                         </span>
-                      </td>
-                      <td className="px-3 py-4 text-center">
-                        <button
-                          className={`btn-sm font-medium transition-all duration-200 ${
-                            user.enabled 
-                              ? 'bg-yellow-500 hover:bg-yellow-600 text-white' 
-                              : 'bg-green-500 hover:bg-green-600 text-white'
-                          }`}
-                          onClick={() => handleChangeUserStatus(user.id, user.enabled)}
-                        >
-                          {user.enabled ? "ปิดใช้งาน" : "เปิดใช้งาน"}
-                        </button>
                       </td>
                     </motion.tr>
                   ))}

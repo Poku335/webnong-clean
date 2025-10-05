@@ -25,6 +25,27 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
 
   if (!order) return null;
 
+  // ฟังก์ชันสำหรับสร้างรหัสพัสดุ (3 ตัวอักษรพิมพ์ใหญ่ + 4 ตัวเลข)
+  const generateTrackingCode = (orderId) => {
+    // ใช้ orderId เป็น seed เพื่อให้ได้รหัสเดิมทุกครั้ง
+    const seed = orderId || Math.random();
+    const random = (seed * 9301 + 49297) % 233280;
+    
+    // สร้าง 3 ตัวอักษรพิมพ์ใหญ่
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let letterPart = '';
+    let tempRandom = random;
+    for (let i = 0; i < 3; i++) {
+      letterPart += letters[Math.floor(tempRandom % 26)];
+      tempRandom = Math.floor(tempRandom / 26);
+    }
+    
+    // สร้าง 4 ตัวเลข
+    const numberPart = String(Math.floor((random % 9000) + 1000));
+    
+    return letterPart + numberPart;
+  };
+
   const handleImageClick = (imageUrl) => {
     setImageModalUrl(imageUrl);
     setShowImageModal(true);
@@ -174,6 +195,25 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
                   </div>
                 </div>
               </div>
+
+              {/* Tracking Code - แสดงเฉพาะเมื่อ status เป็น Completed หรือ ชำระเงินแล้ว */}
+              {(order.orderStatus === "Completed" || order.orderStatus === "ชำระเงินแล้ว") && (
+                <div className="bg-emerald-100 rounded-xl p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <Package className="w-5 h-5 mr-2" />
+                    สินค้าที่ส่งซื้อ
+                  </h3>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-3">รหัสพัสดุ</p>
+                    <div className="inline-flex items-center justify-center">
+                      <span className="font-mono text-2xl font-bold text-emerald-600 bg-emerald-50 px-6 py-3 rounded-xl border-2 border-emerald-200 shadow-sm">
+                        {generateTrackingCode(order.id)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">ใช้รหัสนี้ในการติดตามพัสดุของคุณ</p>
+                  </div>
+                </div>
+              )}
 
               {/* Products */}
               <div className="bg-orange-50 rounded-xl p-6">

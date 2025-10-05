@@ -276,92 +276,92 @@ const FormProduct = () => {
             <table className="w-full table-auto">
               <thead className="bg-orange-50">
                 <tr>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-12"></th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-20">
-                    <ImageIcon className="w-4 h-4 inline mr-1" />
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-12"></th>
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-20">
+                    <ImageIcon className="w-4 h-4 inline mr-2" />
                     รูปภาพ
                   </th>
-                  <th className="px-2 py-3 text-left text-xs font-bold text-gray-900 w-40">
-                    <Package className="w-4 h-4 inline mr-1" />
+                  <th className="px-3 py-4 text-left text-sm font-bold text-gray-900 w-48">
+                    <Package className="w-4 h-4 inline mr-2" />
                     ชื่อสินค้า
                   </th>
-                  <th className="px-2 py-3 text-left text-xs font-bold text-gray-900 w-48">รายละเอียด</th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-24">
+                  <th className="px-3 py-4 text-left text-sm font-bold text-gray-900 w-48">รายละเอียด</th>
+                  <th className="px-3 py-4 text-right text-sm font-bold text-gray-900 w-24">
                     ราคา
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-20">
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-28">
                     จำนวน
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-20">ขายแล้ว</th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-28">
-                    <Calendar className="w-4 h-4 inline mr-1" />
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-28">ขายแล้ว</th>
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-32">
+                    <Calendar className="w-4 h-4 inline mr-2" />
                     อัปเดต
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-bold text-gray-900 w-32">จัดการ</th>
+                  <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-32">จัดการ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredProducts.map((item, index) => (
                   <tr
                     key={item.id}
-                    className="hover:bg-orange-50/50 transition-colors duration-200"
+                    className="hover:bg-orange-50/50 transition-all duration-300"
                   >
-                      <td className="px-2 py-3 text-xs font-semibold text-gray-900 text-center">
+                      <td className="px-3 py-4 text-sm font-semibold text-gray-900 text-center">
                         {index + 1}
                       </td>
-                      <td className="px-2 py-3 text-center">
+                      <td className="px-3 py-4 text-center">
                         {item.images && item.images.length > 0 ? (
                           <img
-                            className="w-12 h-12 rounded-lg shadow-md object-cover mx-auto"
+                            className="w-16 h-16 rounded-lg shadow-md object-cover mx-auto"
                             src={item.images[0].url}
                             alt={item.title}
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm text-gray-500 text-xs mx-auto">
-                            <ImageIcon className="w-4 h-4" />
+                          <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center shadow-sm text-gray-500 text-sm mx-auto">
+                            <ImageIcon className="w-5 h-5" />
                           </div>
                         )}
                       </td>
-                      <td className="px-2 py-3">
+                      <td className="px-3 py-4">
                         <div className="min-w-0">
-                          <p className="font-semibold text-gray-900 text-xs truncate">{item.title}</p>
-                          <p className="text-xs text-gray-500 truncate">
+                          <p className="font-semibold text-gray-900 text-sm truncate">{item.title}</p>
+                          <p className="text-sm text-gray-500 truncate">
                             {categories.find(cat => cat.id === item.categoryId)?.name || 'ไม่มีหมวดหมู่'}
                           </p>
                         </div>
                       </td>
-                      <td className="px-2 py-3">
-                        <p className="text-xs text-gray-700 line-clamp-2">{item.description}</p>
+                      <td className="px-3 py-4">
+                        <p className="text-sm text-gray-700 line-clamp-2">{item.description}</p>
                       </td>
-                      <td className="px-2 py-3 text-center">
-                        <span className="font-semibold text-orange-500 text-xs">
-                          {numberFormat(item.price)}
+                      <td className="px-3 py-4 text-right">
+                        <span className="font-bold text-orange-500 text-sm">
+                          {numberFormat(item.price)} บาท
                         </span>
                       </td>
-                      <td className="px-2 py-3 text-center">
-                        <span className="text-xs text-gray-700">{item.quantity}</span>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-sm font-medium text-gray-900">{item.quantity}</span>
                       </td>
-                      <td className="px-2 py-3 text-center">
-                        <span className="text-xs text-green-600 font-semibold">{item.sold}</span>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-sm text-green-600 font-semibold">{item.sold}</span>
                       </td>
-                      <td className="px-2 py-3 text-center">
-                        <span className="text-xs text-gray-500">{dateFormat(item.updatedAt)}</span>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-sm text-gray-900">{dateFormat(item.updatedAt)}</span>
                       </td>
-                      <td className="px-2 py-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
+                      <td className="px-3 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <Link
                             to={"/admin/product/" + item.id}
-                            className="btn-sm bg-yellow-500 hover:bg-yellow-600 text-white flex items-center gap-1 shadow-md hover:shadow-lg transition-colors duration-200 text-xs px-2 py-1"
+                            className="btn-ghost text-sm px-3 py-2 flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
                           >
-                            <Pencil className="w-3 h-3" />
-                            แก้ไข
+                            <Pencil className="w-4 h-4" />
+                            <span className="hidden lg:inline">แก้ไข</span>
                           </Link>
                           <button
                             onClick={() => handleDelete(item.id)}
-                            className="btn-sm bg-red-500 hover:bg-red-600 text-white flex items-center gap-1 shadow-md hover:shadow-lg transition-colors duration-200 text-xs px-2 py-1"
+                            className="btn-ghost text-sm px-3 py-2 flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
                           >
-                            <Trash className="w-3 h-3" />
-                            ลบ
+                            <Trash className="w-4 h-4" />
+                            <span className="hidden lg:inline">ลบ</span>
                           </button>
                         </div>
                       </td>

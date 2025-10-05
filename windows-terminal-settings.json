@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "defaults": {
+      "cursorShape": "filledBox",
+      "cursorHeight": 100,
+      "cursorColor": "#FFFFFF"
+    },
+    "list": [
+      {
+        "name": "PowerShell",
+        "source": "Windows.Terminal.PowershellCore",
+        "cursorShape": "filledBox",
+        "cursorHeight": 100
+      }
+    ]
+  }
+}

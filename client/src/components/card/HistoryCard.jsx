@@ -12,6 +12,27 @@ const HistoryCard = () => {
   // console.log(token);
   const [orders, setOrders] = useState([]);
 
+  // ฟังก์ชันสำหรับสร้างรหัสพัสดุ (3 ตัวอักษรพิมพ์ใหญ่ + 4 ตัวเลข)
+  const generateTrackingCode = (orderId) => {
+    // ใช้ orderId เป็น seed เพื่อให้ได้รหัสเดิมทุกครั้ง
+    const seed = orderId || Math.random();
+    const random = (seed * 9301 + 49297) % 233280;
+    
+    // สร้าง 3 ตัวอักษรพิมพ์ใหญ่
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let letterPart = '';
+    let tempRandom = random;
+    for (let i = 0; i < 3; i++) {
+      letterPart += letters[Math.floor(tempRandom % 26)];
+      tempRandom = Math.floor(tempRandom / 26);
+    }
+    
+    // สร้าง 4 ตัวเลข
+    const numberPart = String(Math.floor((random % 9000) + 1000));
+    
+    return letterPart + numberPart;
+  };
+
   useEffect(() => {
     // code
     hdlGetOrders(token);
@@ -125,11 +146,26 @@ const HistoryCard = () => {
 
             {/* Payment Information */}
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-600">วิธีการชำระเงิน</p>
-                  <p className="font-medium text-gray-900">{item.paymentMethod || "ปลายทาง"}</p>
+              <div className="flex items-start justify-between">
+                <div className="flex space-x-8">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-2">วิธีการชำระเงิน</p>
+                    <p className="font-mono text-lg font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg border border-blue-200">
+                      {item.paymentMethod || "ปลายทาง"}
+                    </p>
+                  </div>
+                  
+                  {/* แสดงรหัสพัสดุในช่องว่างเมื่อ status เป็น Completed หรือ ชำระเงินแล้ว */}
+                  {(item.orderStatus === "Completed" || item.orderStatus === "ชำระเงินแล้ว") && (
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600 mb-2">รหัสพัสดุ</p>
+                      <p className="font-mono text-lg font-bold text-green-600 bg-green-50 px-3 py-1 rounded-lg border border-green-200">
+                        {generateTrackingCode(item.id)}
+                      </p>
+                    </div>
+                  )}
                 </div>
+                
                 <div className="text-right">
                   <p className="text-lg font-semibold text-gray-900">ราคารวม</p>
                   <p className="text-2xl font-bold text-orange-600">{numberFormat(item.cartTotal)}</p>

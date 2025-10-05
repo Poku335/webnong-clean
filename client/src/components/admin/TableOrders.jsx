@@ -36,6 +36,27 @@ const TableOrders = () => {
   const [imageModalUrl, setImageModalUrl] = useState("");
   const [showOrderDetails, setShowOrderDetails] = useState(false);
 
+  // ฟังก์ชันสำหรับสร้างรหัสพัสดุ (3 ตัวอักษรพิมพ์ใหญ่ + 4 ตัวเลข)
+  const generateTrackingCode = (orderId) => {
+    // ใช้ orderId เป็น seed เพื่อให้ได้รหัสเดิมทุกครั้ง
+    const seed = orderId || Math.random();
+    const random = (seed * 9301 + 49297) % 233280;
+
+    // สร้าง 3 ตัวอักษรพิมพ์ใหญ่
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let letterPart = '';
+    let tempRandom = random;
+    for (let i = 0; i < 3; i++) {
+      letterPart += letters[Math.floor(tempRandom % 26)];
+      tempRandom = Math.floor(tempRandom / 26);
+    }
+
+    // สร้าง 4 ตัวเลข
+    const numberPart = String(Math.floor((random % 9000) + 1000));
+
+    return letterPart + numberPart;
+  };
+
   useEffect(() => {
     handleGetOrder(token);
   }, [token]);
@@ -260,12 +281,13 @@ const TableOrders = () => {
                   ยอดรวม
                 </th>
                 <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-28">สถานะ</th>
+                <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-32">
+                  <Package className="w-4 h-4 inline mr-2" />
+                  รหัสพัสดุ
+                </th>
                 <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-32">จัดการ</th>
                 <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-24">รายละเอียด</th>
-                <th className="px-3 py-4 text-center text-sm font-bold text-gray-900 w-28">
-                  <ImageIcon className="w-4 h-4 inline mr-2" />
-                  สลิป
-                </th>
+
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -324,6 +346,18 @@ const TableOrders = () => {
                       </span>
                     </td>
                     <td className="px-3 py-4 text-center">
+                      {(item.orderStatus === "Completed" || item.orderStatus === "ชำระเงินแล้ว") ? (
+                        <div className="flex flex-col items-center space-y-1">
+                          <span className="font-mono text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded border border-green-200">
+                            {generateTrackingCode(item.id)}
+                          </span>
+                          <span className="text-xs text-gray-500">รหัสพัสดุ</span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">-</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-4 text-center">
                       <select
                         value={item.orderStatus}
                         onChange={(e) => handleChangeOrderStatus(token, item.id, e.target.value)}
@@ -341,44 +375,6 @@ const TableOrders = () => {
                         <Eye className="w-4 h-4" />
                         <span className="hidden lg:inline">ดู</span>
                       </button>
-                    </td>
-                    <td className="px-3 py-4 text-center">
-                      {item.paymentSlip ? (
-                        <div className="flex flex-col items-center space-y-1">
-                          <div className="relative group">
-                            <img
-                              src={item.paymentSlip}
-                              alt="Payment Slip"
-                              className="w-12 h-12 object-cover rounded border border-orange-100 cursor-pointer hover:border-orange-300 transition-all duration-300"
-                              onClick={() => handleImageClick(item.paymentSlip)}
-                            />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded transition-all duration-300 flex items-center justify-center">
-                              <ZoomIn className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-                          </div>
-                          <div className="flex gap-1">
-                            <button
-                              onClick={() => handleImageClick(item.paymentSlip)}
-                              className="text-sm px-1 py-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
-                            >
-                              ดู
-                            </button>
-                            <button
-                              onClick={() => window.open(item.paymentSlip, '_blank')}
-                              className="text-sm px-1 py-1 text-green-600 hover:text-green-800 hover:bg-green-50 rounded"
-                            >
-                              เปิด
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center space-y-1">
-                          <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center border border-gray-200">
-                            <ImageIcon className="w-5 h-5 text-gray-400" />
-                          </div>
-                          <span className="text-sm text-gray-400">ไม่มี</span>
-                        </div>
-                      )}
                     </td>
                   </motion.tr>
                 ))}
