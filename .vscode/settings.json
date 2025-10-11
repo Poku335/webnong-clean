@@ -1,7 +1,0 @@
-{
-  "terminal.integrated.cursorBlinking": false,
-  "terminal.integrated.cursorStyle": "block",
-  "terminal.integrated.cursorWidth": 1,
-  "editor.cursorBlinking": "solid",
-  "editor.cursorSmoothCaretAnimation": "off"
-}
